@@ -4,9 +4,9 @@ Uses the DNS to discover localization servers near a GPS location. The number of
 
 # Installation
 
-Run the command to install the pre-release version of h3:
+Run the command to install s2sphere:
 ```
-pip install --pre h3
+pip install s2sphere
 ```
 
 # Usage
