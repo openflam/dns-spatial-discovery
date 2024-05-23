@@ -2,7 +2,7 @@ import h3.api.numpy_int as h3
 
 
 # Table from https://h3geo.org/docs/core-library/restable
-# Dictionary from area to resolution
+# Dictionary from area (m^2) to resolution
 area_to_resolution = {
     0.895: 15,
     6.267: 14,
