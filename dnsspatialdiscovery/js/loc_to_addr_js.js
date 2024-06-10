@@ -38,17 +38,21 @@ let area_to_resolution = {
 
 let radius_to_resolution = {};
 
+// convert the dictionary from radius to resolution
 for (const item in area_to_resolution){
     radius_to_resolution[(item/3.1415)**(1/2)] = area_to_resolution[item]
 }
-// console.log(radius_to_resolution)
 
+//get the level of resolution given the radius 
 function _get_resolution_from_accuracy(accuracy_m){
     let keys = [];
+    
+    //get all keys of the dictionary
     for (var str of (Object.keys(radius_to_resolution))){
         keys.push(parseFloat(str))
     }
 
+    //sort the keys and find the least radius and resolution
     var sorted_keys = keys.sort((a,b)=>a-b)
     for (const radius of sorted_keys){
         if (radius > accuracy_m){
@@ -58,8 +62,8 @@ function _get_resolution_from_accuracy(accuracy_m){
     return [0,0]
 }
 
+//get the address of a cell
 function get_address_from_s2cell_id(cell, suffix){
-
 
     var bits = cell.id()
     var level = cell.level()
@@ -70,48 +74,70 @@ function get_address_from_s2cell_id(cell, suffix){
         addr = addr + (sub_bits >> BigInt((2 * i)) & BigInt(0x3)).toString() + "."
     }
 
+    //there is no cell.face() in the s2 javasript package
     addr = addr + suffix
     // addr = addr + (cell.face()).toString + "." + suffix
 
     return addr
 }
 
+//A recursion to get all parent of the children cells
 function get_all_parent(cells,current,degree){
 
+    //stop when the degree is less than 0
     if(degree == -1){
         return cells
     }
+
+    //get all parents of the current cells
     var parent = []
     for (var cell of current){
         parent.push(cell.parent())
     }
+
+    //concat the parent of this level with previous parents we got
     cells = cells.concat(parent)
+
     return get_all_parent(cells,parent,degree-1)
 }
 
+
 function loc_to_addr(lat, lon, accuracy_m, suffix="loc"){
     
+    // Convert a location to an s2 address.
+    //     Parameters
+    //     ----------
+    //     lat : float
+    //         Latitude of the location.
+    //     lon : float
+    //         Longitude of the location.
+    //     accuracy_m : float
+    //         Accuracy of the address in meters.
+
+    //get the resolution level and radius given the accuracy
     var [resolution,radius] = _get_resolution_from_accuracy(accuracy_m)
-    var s2LatLong = new s2.LatLng(lat,lon)
     
+    //get all children cells
+    //the level is 1 more than the accuracy we want
+    var s2LatLong = new s2.LatLng(lat,lon)
     const cellCoveringOptions = {min: resolution+1, max: resolution+1};
     const coveringCells = s2.RegionCoverer.getRadiusCovering(s2LatLong, radius, cellCoveringOptions);
-    
     var children_ids = coveringCells.cellIds().map((cellId) => cellId.id())
     var children_cells = children_ids.map(c => new s2.CellId(c))
-    console.log(children_cells)
-    // children_cells.map(c => console.log(c.level()))
-    // children_cells.map(c => console.log(c.parent().level()))
 
+    //get all parent cells of the children cells we got above
     parent = []
     for (var cell of children_cells){
         parent.push(cell.parent())
     }
     parent = get_all_parent(parent,parent,resolution)
     var parent_ids = parent.map(c => c.id())
+
+    //remove duplicate parent cells
     parent_ids = [...new Set(parent_ids)];
     var parent_cells = parent_ids.map(c => new s2.CellId(c))
     
+    //add addresses of all parent and childre cells to the answer dictionary
     var answer = {}
     answer['children'] = []
     answer['parent'] = []
@@ -122,7 +148,8 @@ function loc_to_addr(lat, lon, accuracy_m, suffix="loc"){
     for(var cell of parent_cells){
         answer['parent'].push(get_address_from_s2cell_id(cell,suffix))
     }
-    // console.log(answer)
+    
+    return answer;
 }
 
 loc_to_addr(32.715651, -117.160542,15)
