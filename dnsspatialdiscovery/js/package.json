@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "@radarlabs/s2": "^0.0.5"
+  }
+}
