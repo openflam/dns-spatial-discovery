@@ -37,7 +37,25 @@ python -m tests.test_dns_discovery
 # Javascript
 
 ## Run
+To use 'loc_to_addr' and 'loc_to_ip' in js, you need to follow this syntax:
 ```
-cd js
-node loc_to_addr_js.js
+var lat = 40.2574448;
+var lng = -111.7089464;
+var level = 15;
+
+var addr_list = loc_to_addr(lat, lng, level);
+
+loc_to_ip(lat,lng,level).then(
+    res => console.log(res)
+).catch(
+    err => console.log(err)
+)
 ```
+
+## Tests
+```
+cd s2_js
+python -m http.server
+```
+
+Tests result will show in the console.
