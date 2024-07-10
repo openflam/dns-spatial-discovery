@@ -55,7 +55,6 @@ loc_to_ip(lat,lng,level).then(
 ## Tests
 ```
 cd s2_js
-python -m http.server
+python -m http.server 9500
 ```
-
-Tests result will show in the console.
+Open http://0.0.0.0:9500 on the browser. Open the `test/` directory on the webpage. Open the browser console (eg. Ctrl + Shift + I on Chrome) to see the rest results.
