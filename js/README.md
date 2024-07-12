@@ -1,24 +1,11 @@
 # Javascript DNS spatial discovery
 
-## Run
-To use 'loc_to_addr' and 'loc_to_ip' in js, you need to follow this syntax:
-```
-var lat = 40.2574448;
-var lng = -111.7089464;
-var level = 15;
+## Development
 
-var addr_list = loc_to_addr(lat, lng, level);
+Set up npm, and Node.js using nvm using instruction [here](https://nodejs.org/en/download/package-manager). 
 
-loc_to_ip(lat,lng,level).then(
-    res => console.log(res)
-).catch(
-    err => console.log(err)
-)
-```
+To install dependencies: `npm install` and to build `npm run build`.
 
-## Tests
-```
-cd s2_js
-python -m http.server 9500
-```
-Open http://0.0.0.0:9500 on the browser. Open the `test/` directory on the webpage. Open the browser console (eg. Ctrl + Shift + I on Chrome) to see the rest results.
+## Testing
+
+Run tests using: `npm run test`. It'll start a server at [http://localhost:9000]. Navigate to `/test/test.html` to view the rest results.

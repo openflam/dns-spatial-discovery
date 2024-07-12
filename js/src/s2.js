@@ -39,33 +39,33 @@ let area_to_resolution = {
 let radius_to_resolution = {};
 
 // convert the dictionary from radius to resolution
-for (const item in area_to_resolution){
-    radius_to_resolution[(item/3.1415)**(1/2)] = area_to_resolution[item]
+for (const item in area_to_resolution) {
+    radius_to_resolution[(item / 3.1415) ** (1 / 2)] = area_to_resolution[item]
 }
 
 //get the level of resolution given the radius 
-function _get_resolution_from_accuracy(accuracy_m){
+function _get_resolution_from_accuracy(accuracy_m) {
     let keys = [];
-    
+
     //get all keys of the dictionary
-    for (var str of (Object.keys(radius_to_resolution))){
+    for (var str of (Object.keys(radius_to_resolution))) {
         keys.push(parseFloat(str))
     }
 
     //sort the keys and find the least radius and resolution
-    var sorted_keys = keys.sort((a,b)=>a-b)
-    for (const radius of sorted_keys){
-        if (radius > accuracy_m){
-            return [radius_to_resolution[radius],radius]
+    var sorted_keys = keys.sort((a, b) => a - b)
+    for (const radius of sorted_keys) {
+        if (radius > accuracy_m) {
+            return [radius_to_resolution[radius], radius]
         }
     }
-    return [0,0]
+    return [0, 0]
 }
 
 //get the key id for a location from Lat/Lng
-function get_s2cell_key(lat,lng,level){
+function get_s2cell_key(lat, lng, level) {
 
-    var key = S2.latLngToKey(lat,lng,level);
+    var key = S2.latLngToKey(lat, lng, level);
     // eg: '4/032212303102210'
 
     var parts = key.split('/');
@@ -76,7 +76,7 @@ function get_s2cell_key(lat,lng,level){
     var position = parts[1];
     // '032212303102210'
 
-    return [face,position];
+    return [face, position];
 }
 
 // convert the hilbert curve quadtree id into dns address
@@ -85,22 +85,22 @@ function get_s2cell_key(lat,lng,level){
 // for example: 01 means the second area of the first area of this face
 // hence we add the face level in the end to make it unique around the globe
 // so the key '4/032212303102210' -> '0.3.2.2.1.2.3.0.3.1.0.2.2.1.0.4.suffix'
-function get_adddress_from_s2cell_key(position,face,suffix){
+function get_adddress_from_s2cell_key(position, face, suffix) {
     var digits = position.toString();
     var split = digits.split('');
     var dotted = split.join('.');
-    var result = dotted+'.'+face+'.'+suffix;
-    
+    var result = dotted + '.' + face + '.' + suffix;
+
     return result
 }
 
 // get the child address for a quadtree key
-function get_child_address(position,face,num,suffix){
+function get_child_address(position, face, num, suffix) {
     var digits = position.toString();
     var split = digits.split('');
     var dotted = split.join('.');
-    var result = dotted+'.'+num+'.'+face+'.'+suffix;
-    
+    var result = dotted + '.' + num + '.' + face + '.' + suffix;
+
     return result
 }
 
@@ -113,58 +113,44 @@ function get_child_address(position,face,num,suffix){
 //     Longitude of the location.
 // accuracy_m : float
 //     Accuracy of the address in meters.
-function loc_to_addr(lat,lon,accuracy_m,suffix='loc'){
-    var [resolution,radius] =  _get_resolution_from_accuracy(accuracy_m);
+function loc_to_addr(lat, lon, accuracy_m, suffix = 'loc') {
+    var [resolution, radius] = _get_resolution_from_accuracy(accuracy_m);
     var answer = {};
 
     //add all parent address
     answer['parent'] = [];
-    for(let i=1;i<resolution+1;i++){
-        var [face,position] = get_s2cell_key(lat,lon,i);
-        answer['parent'].push(get_adddress_from_s2cell_key(position,face,suffix))
+    for (let i = 1; i < resolution + 1; i++) {
+        var [face, position] = get_s2cell_key(lat, lon, i);
+        answer['parent'].push(get_adddress_from_s2cell_key(position, face, suffix))
     }
 
     //add four children address
-    var [this_face,this_pos] = get_s2cell_key(lat,lon,resolution);
-    var this_address = get_adddress_from_s2cell_key(this_pos,this_face,suffix);
+    var [this_face, this_pos] = get_s2cell_key(lat, lon, resolution);
+    var this_address = get_adddress_from_s2cell_key(this_pos, this_face, suffix);
     answer['children'] = [];
-    for(let i=0;i<4;i++){
-        answer['children'].push(get_child_address(this_pos,this_face,i,suffix))
+    for (let i = 0; i < 4; i++) {
+        answer['children'].push(get_child_address(this_pos, this_face, i, suffix))
     }
 
     return answer
 }
 
-// Used DOH api: https: //developers.google.com/speed/public-dns/docs/doh to get ip address of a dns server
-async function dns_lookup(domain){
-    const url = `https://dns.google/resolve?name=${domain}`;
-    try{
-        const response = await fetch(url);
-        if(!response.ok){
-            throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        const ip = data.Answer[0].data;
-        return ip;
-    } catch (error){
-        return error.message
-    }
-}
+
 
 
 // async function to convert a list of dns addresses to ip addresses
-async function addr_to_ip(addr_list){
+async function addr_to_ip(addr_list) {
     const ip_addresses = {}
 
-    for (const key in addr_list){
+    for (const key in addr_list) {
         ip_addresses[key] = [];
-        for (const add of addr_list[key]){
+        for (const add of addr_list[key]) {
 
             //use dns_lookup to get the ip address
             try {
                 const result = await dns_lookup(add);
                 ip_addresses[key].push(result)
-            } catch (err){
+            } catch (err) {
                 ip_addresses[key].push(err.message)
             }
         }
@@ -180,8 +166,8 @@ async function addr_to_ip(addr_list){
 //     Longitude of the location.
 // accuracy_m : float
 //     Accuracy of the address in meters.
-async function loc_to_ip(lat,lon,accuracy_m,suffix='loc'){
-    var addr_list = loc_to_addr(lat,lon,accuracy_m,suffix='loc')
+async function loc_to_ip(lat, lon, accuracy_m, suffix = 'loc') {
+    var addr_list = loc_to_addr(lat, lon, accuracy_m, suffix = 'loc')
     const result = await addr_to_ip(addr_list);
     return result
 }
