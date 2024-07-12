@@ -31,7 +31,7 @@ describe('DNS', function () {
         assert.isOk('fromCache' in secondResponse);
     });
 
-    it('Check if record is removed from cache after TTL.', async function () {
+    it('Check if cached record is not returned after TTL expiry.', async function () {
         const dns = new dnsspatialdiscovery.DNS();
         const firstResponse = await dns.dnsLookup('example.com', 'A');
 
