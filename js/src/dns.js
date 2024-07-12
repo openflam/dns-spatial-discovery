@@ -83,11 +83,9 @@ class DNS {
         }
         const cached_record = this.getRecordFromCache(domain, type);
         if (cached_record) {
-            console.log(`Record found in cache: ${domain} ${type}`);
             cached_record['fromCache'] = true;
             return cached_record;
         }
-        console.log(`Record not found in cache: ${domain} ${type}`);
         const url = `${this.dohUrl}?name=${domain}&type=${type}`;
         try {
             const response = await fetch(url, { headers: { accept: 'application/dns-json' } });
