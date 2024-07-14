@@ -24,8 +24,10 @@ class LocationToServerAddr {
         for (let domain of geoDomains) {
             try {
                 const result = await this.dnsObj.dnsLookup(domain, 'TXT');
-                if ('data' in result) {
-                    serverAddrs.push(result.data);
+                for (let record of result) {
+                    if ('data' in record) {
+                        serverAddrs.push(record.data);
+                    }
                 }
             }
             catch (error) {

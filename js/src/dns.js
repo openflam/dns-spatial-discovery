@@ -32,8 +32,11 @@ class DNS {
         if (!(domain in this.cache)) {
             this.cache[domain] = {};
         }
+        if (!(type in this.cache[domain])) {
+            this.cache[domain][type] = [];
+        }
         record['timestamp'] = Date.now();
-        this.cache[domain][type] = record;
+        this.cache[domain][type].push(record);
     }
 
     /**
@@ -42,16 +45,27 @@ class DNS {
      */
     getRecordFromCache(domain, type) {
         if (domain in this.cache && type in this.cache[domain]) {
-            const record = this.cache[domain][type];
-            if ((Date.now() - record['timestamp']) < record.TTL * 1000) {
-                return record;
-            }
-            // Remove record from cache if TTL has expired
-            else {
-                delete this.cache[domain][type];
-                if (Object.keys(this.cache[domain]).length === 0) {
-                    delete this.cache[domain];
+            var cached_records = this.cache[domain][type];
+
+            var recordsToReturn = [];
+            var recordIndicesToRemove = [];
+            for (let i = 0; i < cached_records.length; i++) {
+                let record = cached_records[i];
+                if ((Date.now() - record['timestamp']) < record.TTL * 1000) {
+                    recordsToReturn.push(record);
                 }
+                // Mark record to be removed if TTL has expired
+                else {
+                    recordIndicesToRemove.push(i);
+                }
+            }
+            // Remove records with expired TTL
+            cached_records = cached_records.filter((record, index) => !recordIndicesToRemove.includes(index));
+            this.cache[domain][type] = cached_records;
+
+            // Return the records if there are any
+            if (recordsToReturn.length > 0) {
+                return recordsToReturn;
             }
         }
         return null;
@@ -64,9 +78,9 @@ class DNS {
      * 
      * @param {string} domain - The domain name to lookup.
      * @param {string} type - The type of record to lookup (A, CNAME, PTR, TXT, LOC).
-     * @returns {Promise} - A promise that resolves to the record or an error message
+     * @returns {Promise} - A promise that resolves to an array of records or an error message
      * 
-     * The record object contains the following relevant fields if the record is found:
+     * The record objects contains the following relevant fields if the record is found:
      * - data: The IP address(for A type) or CNAME (for CNAME type) etc.
      * - TTL: Time to live in seconds
      * 
@@ -81,10 +95,12 @@ class DNS {
         if (!Object.values(DNS.DNS_TYPE_ID_TO_NAME).includes(type)) {
             throw new Error(`Unsupported DNS record type: ${type}. Supported types: ${Object.values(DNS.DNS_TYPE_ID_TO_NAME).join(', ')}`);
         }
-        const cached_record = this.getRecordFromCache(domain, type);
-        if (cached_record) {
-            cached_record['fromCache'] = true;
-            return cached_record;
+        const cached_records = this.getRecordFromCache(domain, type);
+        if (cached_records) {
+            for (let record of cached_records) {
+                record['fromCache'] = true;
+            }
+            return cached_records;
         }
         const url = `${this.dohUrl}?name=${domain}&type=${type}`;
         try {
@@ -97,19 +113,24 @@ class DNS {
             // Check if the response contains the requested record type and return the first one
             // If no record of the requested type is found, throw an error
             if ('Answer' in data && data.Answer.length > 0) {
-                for (var record of data.Answer) {
+                var recordsToReturn = [];
+                for (let record of data.Answer) {
                     // Add to cache
-                    this.addRecordToCache(domain, DNS.DNS_TYPE_ID_TO_NAME[record.type], record);
-                    // Return the first record of the requested type
-                    if (DNS.DNS_TYPE_ID_TO_NAME[record.type] === type) {
-                        return record;
+                    if (record.type in DNS.DNS_TYPE_ID_TO_NAME) {
+                        this.addRecordToCache(domain, DNS.DNS_TYPE_ID_TO_NAME[record.type], record);
                     }
+                    if (DNS.DNS_TYPE_ID_TO_NAME[record.type] === type) {
+                        recordsToReturn.push(record);
+                    }
+                }
+                if (recordsToReturn.length > 0) {
+                    return recordsToReturn;
                 }
             }
             // If no answer is found, cache the negative result if negative caching is enabled
             if ('Authority' in data && data.Authority.length > 0 && this.negativeCachingEnabled) {
                 var soa_record = null;
-                for (record of data.Authority) {
+                for (let record of data.Authority) {
                     if (record.type === 6) {
                         soa_record = record;
                         break;
@@ -117,13 +138,14 @@ class DNS {
                 }
                 if (soa_record) {
                     const soa_record_data = soa_record.data.split(' ');
+                    // Negative caching TTL is the last field in the SOA record
                     const negative_caching_ttl = Number(soa_record_data[soa_record_data.length - 1]);
                     var negativeRecord = {
                         'error': 'NO-ANSWER',
                         'TTL': negative_caching_ttl
                     }
                     this.addRecordToCache(domain, type, negativeRecord);
-                    return negativeRecord;
+                    return [negativeRecord];
                 }
             }
             if (this.negativeCachingEnabled) {
