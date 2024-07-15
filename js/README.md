@@ -1,5 +1,23 @@
 # Javascript DNS spatial discovery
 
+## Usage
+Include the bundled `./dist/main.js` as a script:
+```html
+<script src="./dist/main.js"></script>
+```
+
+And then the library can be use in javascript as:
+```javascript
+const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
+const servers = await discoveryObj.getServersAddrs(lat=44.4, lon=-79.6, error_m=5);
+
+// Expected output is the list of servers that provide localization service in this region. Example:
+[
+    'arena.loc.arenaxr.org',
+    'cubicles.loc.arenaxr.org'
+]
+```
+
 ## Development
 
 Set up npm, and Node.js using nvm using instruction [here](https://nodejs.org/en/download/package-manager). 
