@@ -26,7 +26,7 @@ class TestLocToServer:
                 ],
             ),
             # Location 2 (CMU CIC Arena)
-            (40.444034531976556, -79.94661290569255, 5,
+            (40.44403547793949, -79.9466203369454, 5,
                 [
                     "arena.wiselambda4.andrew.cmu.edu.",
                     "cubicles.wiselambda4.andrew.cmu.edu.",
