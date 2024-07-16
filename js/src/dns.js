@@ -138,8 +138,11 @@ class DNS {
                 }
                 if (soa_record) {
                     const soa_record_data = soa_record.data.split(' ');
-                    // Negative caching TTL is the last field in the SOA record
-                    const negative_caching_ttl = Number(soa_record_data[soa_record_data.length - 1]);
+                    // Negative caching TTL is minimum of the MINIMUM field in SOA record
+                    // and the TTL of the SOA record itself. RFC 2308.
+                    const minimum_soa_ttl = Number(soa_record_data[soa_record_data.length - 1]);
+                    const soa_ttl = Number(soa_record.TTL);
+                    const negative_caching_ttl = Math.min(minimum_soa_ttl, soa_ttl);
                     var negativeRecord = {
                         'error': 'NO-ANSWER',
                         'TTL': negative_caching_ttl
