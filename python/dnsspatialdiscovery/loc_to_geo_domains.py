@@ -63,9 +63,7 @@ def get_s2cell_id(latitude, longitude, level):
     return cell
 
 
-def get_base_geo_domain_digits(latitude, longitude, error_m):
-    level = _get_level_from_error(error_m)
-    cell = get_s2cell_id(latitude, longitude, level)
+def digits_from_s2cell_id(cell):
     bits = cell.id()
     level = cell.level()
     sub_bits = bits >> (61 - level * 2)
@@ -76,6 +74,12 @@ def get_base_geo_domain_digits(latitude, longitude, error_m):
 
     base_domain_list.append(cell.face())
     return list(map(str, base_domain_list))
+
+
+def get_base_geo_domain_digits(latitude, longitude, error_m):
+    level = _get_level_from_error(error_m)
+    cell = get_s2cell_id(latitude, longitude, level)
+    return digits_from_s2cell_id(cell)
 
 
 def _form_domains_from_digits(domain_digits, suffix):
