@@ -1,5 +1,9 @@
 {
-  "name": "dnsspatialdiscovery",
+  "name": "@openvps/dnsspatialdiscovery",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openvps/dns-spatial-discovery.git.git"
+  },
   "version": "1.0.0",
   "description": "Using the DNS to disocvery localization servers based on location",
   "main": "dist/bundle.js",
@@ -18,5 +22,8 @@
   },
   "dependencies": {
     "s2-geometry": "^1.2.10"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }
