@@ -1,4 +1,4 @@
-describe('Location to Servers', function () {
+describe('Location to Servers (temporary tests - dependent on DNS servers)', function () {
     // Note that all of the test cases here are dependent on a records maintained on a
     // specific nameserver maintained at CMU. Because of the evolving nature of the project and hence
     // these DNS records, these will need to be updated on a regular basis.
@@ -10,8 +10,7 @@ describe('Location to Servers', function () {
             const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                'arena.wiselambda4.andrew.cmu.edu.',
-                'cubicles.wiselambda4.andrew.cmu.edu.'
+                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -23,20 +22,20 @@ describe('Location to Servers', function () {
             const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                'arena.wiselambda4.andrew.cmu.edu.',
-                'cubicles.wiselambda4.andrew.cmu.edu.'
+                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
             ]
             assert.sameMembers(servers, expectedServers);
         });
     });
 
     describe('Cached requests', function () {
-        var discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
+        var discoveryObj = null;
 
         before('Load DNS cache by making a request', async function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
+            discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
         });
 
@@ -46,8 +45,7 @@ describe('Location to Servers', function () {
             const error_m = 5;
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                'arena.wiselambda4.andrew.cmu.edu.',
-                'cubicles.wiselambda4.andrew.cmu.edu.'
+                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -58,8 +56,7 @@ describe('Location to Servers', function () {
             const error_m = 5;
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                'arena.wiselambda4.andrew.cmu.edu.',
-                'cubicles.wiselambda4.andrew.cmu.edu.'
+                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
             ]
             assert.sameMembers(servers, expectedServers);
         });

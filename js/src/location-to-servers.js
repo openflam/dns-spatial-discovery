@@ -32,6 +32,7 @@ class LocationToServerAddr {
             }
             catch (error) {
                 console.log(error);
+                continue;
             }
         }
         return serverAddrs;

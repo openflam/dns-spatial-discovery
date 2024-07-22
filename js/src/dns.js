@@ -143,7 +143,7 @@ class DNS {
                     const minimum_soa_ttl = Number(soa_record_data[soa_record_data.length - 1]);
                     const soa_ttl = Number(soa_record.TTL);
                     const negative_caching_ttl = Math.min(minimum_soa_ttl, soa_ttl);
-                    var negativeRecord = {
+                    let negativeRecord = {
                         'error': 'NO-ANSWER',
                         'TTL': negative_caching_ttl
                     }
@@ -151,12 +151,24 @@ class DNS {
                     return [negativeRecord];
                 }
             }
-            if (this.negativeCachingEnabled) {
-                throw new Error('No answer or authority found in response!');
+            else if (this.negativeCachingEnabled) {
+                let errorRecord = {
+                    'error': 'NO-AUTHORITY',
+                    'TTL': CONFIG.DEFAULT_NEGATIVE_CACHING_TTL
+                }
+                this.addRecordToCache(domain, type, errorRecord);
+                return [errorRecord];
             }
         }
         catch (error) {
-            return `ERROR: ${error.message}`
+            let errorRecord = {
+                'error': 'UNKNOWN-ERROR-OCCURED',
+                'TTL': CONFIG.DEFAULT_NEGATIVE_CACHING_TTL
+            }
+            if (this.negativeCachingEnabled) {
+                this.addRecordToCache(domain, type, errorRecord);
+            }
+            return [errorRecord];
         }
     }
 }
