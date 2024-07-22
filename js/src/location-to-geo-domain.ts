@@ -1,11 +1,10 @@
 import { CONFIG } from './config';
-import { S2 } from 's2-geometry';
-
+import S2 from 's2-geometry';
 
 class LocationToGeoDomain {
     // Table from http://s2geometry.io/resources/s2cell_statistics
     // Dictionary from area (m^2) to level
-    static area_m2_to_level = {
+    static area_m2_to_level: { [area: number]: number } = {
         0.000093: 30,
         0.000371: 29,
         0.001485: 28,
@@ -38,10 +37,10 @@ class LocationToGeoDomain {
         21252753050000: 1
     };
 
-    static errorToLevel(error_m) {
+    static errorToLevel(error_m: number): number {
         const query_area = Math.PI * Math.pow(error_m, 2);
         const areas = Object.keys(LocationToGeoDomain.area_m2_to_level).map(Number).sort((a, b) => a - b);
-        let level = null;
+        let level: number | null = null;
 
         // Get the last level that has an area <= to the query area
         for (const area of areas) {
@@ -59,15 +58,15 @@ class LocationToGeoDomain {
         return level;
     }
 
-    static getS2CellKey(lat, lon, level) {
+    static getS2CellKey(lat: number, lon: number, level: number): string {
         return S2.latLngToKey(lat, lon, level);
     }
 
-    static getGeoDomainFromS2CellKey(s2CellKey) {
-        var parts = s2CellKey.split('/');
-        var face = parts[0];
-        var position = parts[1];
-        var digits = position.split('');
+    static getGeoDomainFromS2CellKey(s2CellKey: string): string[] {
+        const parts = s2CellKey.split('/');
+        const face = parts[0];
+        let position = parts[1];
+        let digits = position.split('');
         // Reverse the digits as we want the 'smallest' level to be at the beginning 
         // of the address
         digits = digits.reverse();
@@ -75,14 +74,14 @@ class LocationToGeoDomain {
         return digits;
     }
 
-    static getBaseGeoDomain(lat, lon, error_m) {
-        var level = LocationToGeoDomain.errorToLevel(error_m);
-        var s2CellKey = LocationToGeoDomain.getS2CellKey(lat, lon, level);
-        var digits = LocationToGeoDomain.getGeoDomainFromS2CellKey(s2CellKey);
-        return digits
+    static getBaseGeoDomain(lat: number, lon: number, error_m: number): string[] {
+        const level = LocationToGeoDomain.errorToLevel(error_m);
+        const s2CellKey = LocationToGeoDomain.getS2CellKey(lat, lon, level);
+        const digits = LocationToGeoDomain.getGeoDomainFromS2CellKey(s2CellKey);
+        return digits;
     }
 
-    static formAddressFromDigits(digits, suffix = CONFIG.GEO_DOMAIN_SUFFIX) {
+    static formAddressFromDigits(digits: string[], suffix: string = CONFIG.GEO_DOMAIN_SUFFIX): string {
         return digits.join('.') + '.' + suffix;
     }
 
@@ -92,16 +91,16 @@ class LocationToGeoDomain {
      * @param {Number} lon Longitude
      * @param {Number} error_m Error in meters
      * @param {String} suffix The suffix to append to the geo domains. Default is from the config file.
-     * @returns Geo domains for the given location. Includes the base geo domain,siblings and all parent geo domains.
+     * @returns Geo domains for the given location. Includes the base geo domain, siblings and all parent geo domains.
      */
-    static getGeoDomains(lat, lon, error_m, suffix = CONFIG.GEO_DOMAIN_SUFFIX) {
-        var baseGeoDigits = LocationToGeoDomain.getBaseGeoDomain(lat, lon, error_m);
-        var geoDomains = [];
+    static getGeoDomains(lat: number, lon: number, error_m: number, suffix: string = CONFIG.GEO_DOMAIN_SUFFIX): string[] {
+        const baseGeoDigits = LocationToGeoDomain.getBaseGeoDomain(lat, lon, error_m);
+        const geoDomains: string[] = [];
 
         // Add the base geo domain and its siblings
         for (let i = 0; i < 4; i++) {
             let subBaseGeoDigits = baseGeoDigits.slice(1);
-            subBaseGeoDigits.unshift(i);
+            subBaseGeoDigits.unshift(i.toString());
             geoDomains.push(LocationToGeoDomain.formAddressFromDigits(subBaseGeoDigits, suffix));
         }
 

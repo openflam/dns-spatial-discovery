@@ -17,6 +17,8 @@
     "http-server": "^14.1.1",
     "mocha": "^10.6.0",
     "opn-cli": "^5.0.0",
+    "ts-loader": "^9.5.1",
+    "typescript": "^5.5.3",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   },
