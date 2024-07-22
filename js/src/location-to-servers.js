@@ -1,6 +1,6 @@
 import { CONFIG } from './config';
 import { DNS } from './dns';
-import { LocationToGeoDomain } from './location-to-geo-domain.js';
+import { LocationToGeoDomain } from './location-to-geo-domain';
 
 class LocationToServerAddr {
     // The DNS object to use for querying DNS records
