@@ -1,4 +1,5 @@
 declare module 's2-geometry' {
-    const S2: any;
-    export = S2;
+    export const S2: {
+        latLngToKey(lat: number, lng: number, level: number): string;
+    };
 }
