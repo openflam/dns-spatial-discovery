@@ -1,5 +1,5 @@
 import { CONFIG } from './config';
-import S2 from 's2-geometry';
+import { S2 } from 's2-geometry';
 
 class LocationToGeoDomain {
     // Table from http://s2geometry.io/resources/s2cell_statistics
