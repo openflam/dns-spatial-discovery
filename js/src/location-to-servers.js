@@ -1,5 +1,5 @@
-import { CONFIG } from './config.js';
-import { DNS } from './dns.js';
+import { CONFIG } from './config';
+import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain.js';
 
 class LocationToServerAddr {
