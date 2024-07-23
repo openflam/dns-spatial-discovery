@@ -5,11 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mocha Tests</title>
+
+  <!-- Include mocha css -->
   <link rel="stylesheet" href="../node_modules/mocha/mocha.css">
 </head>
 
 <body>
   <div id="mocha"></div>
+
+  <!-- Setup mocha and chai -->
   <script src="../node_modules/mocha/mocha.js"></script>
   <script src="../node_modules/chai/chai.js"></script>
   <script>
@@ -17,15 +21,20 @@
     mocha.setup({ slow: "0" })
     const assert = chai.assert;
   </script>
+
+  <!-- Include the dnsspatialdiscovery library -->
   <script src="../dist/bundle.js"></script>
 
   <!-- Attach mocker to axios instance -->
   <script src="./axios-mock/dist/bundle.js"></script>
 
+  <!-- Include test files -->
   <script src="../test/test_dns.js"></script>
   <script src="../test/test_locToGeoDomain.js"></script>
   <script src="../test/test_mapServer.js"></script>
   <script src="../test/test_locToServers.js"></script>
+
+  <!-- Run tests -->
   <script>
     mocha.run();
   </script>
