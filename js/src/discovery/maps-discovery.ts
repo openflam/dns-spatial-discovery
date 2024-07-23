@@ -1,6 +1,7 @@
 import { CONFIG } from '../config';
 import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain';
+import { MapServer } from '../localization/map-server';
 
 class MapsDiscovery {
     // The DNS object to use for querying DNS records
@@ -8,6 +9,9 @@ class MapsDiscovery {
 
     // Name-based filter to apply to the list of servers
     nameFilter: (name: string) => boolean;
+
+    // Currently discovered map servers dictionary with the domain name as the key
+    mapServers: { [key: string]: MapServer } = {};
 
     constructor(nameFilter: (name: string) => boolean | null = null) {
         this.dnsObj = new DNS();
@@ -28,9 +32,8 @@ class MapsDiscovery {
         error_m: number,
         suffix: string = CONFIG.GEO_DOMAIN_SUFFIX,
         nameFilter: (name: string) => boolean | null = this.nameFilter
-    ): Promise<string[]> {
+    ): Promise<{ [name: string]: MapServer }> {
         const geoDomains = LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
-        const serverAddrs: string[] = [];
         for (const domain of geoDomains) {
             try {
                 const result = await this.dnsObj.dnsLookup(domain, 'TXT');
@@ -44,7 +47,9 @@ class MapsDiscovery {
                         if (recordDataJSON.type === 'MCNAME') {
                             let name = recordDataJSON.data;
                             if (nameFilter(name)) {
-                                serverAddrs.push(name);
+                                let mapServer = new MapServer();
+                                mapServer.name = name;
+                                this.mapServers[name] = mapServer;
                             }
                         }
                     }
@@ -54,7 +59,7 @@ class MapsDiscovery {
                 continue;
             }
         }
-        return serverAddrs;
+        return this.mapServers;
     }
 }
 

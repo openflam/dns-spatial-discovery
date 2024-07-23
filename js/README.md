@@ -11,12 +11,8 @@ And then the library can be use in javascript as:
 const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
 const servers = await discoveryObj.discoverMapServers(lat=44.4, lon=-79.6, error_m=5);
 
-// Expected output is the list of servers that provide localization service in this region. Example:
-[
-    'arena.loc.arenaxr.org',
-    'cubicles.loc.arenaxr.org'
-]
-```
+// Expected output is the list of MapServer objects. Each MapServer object has all the data
+// and metadata associated with the map servers discovered.
 
 ## Development
 

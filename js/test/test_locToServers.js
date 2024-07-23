@@ -8,7 +8,10 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lon = -79.94661290569255;
             const error_m = 5;
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -20,7 +23,10 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lon = -79.9466203369454;
             const error_m = 5;
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -43,7 +49,10 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -54,33 +63,40 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
-            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
+    });
 
+    describe('Name filter', function () {
         it('Name filter: ends with .com', async function () {
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
+            discoveryObj.nameFilter = (serverName) => serverName.endsWith('.com.');
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const servers = await discoveryObj.discoverMapServers(
-                lat, lon, error_m,
-                'loc.arenaxr.org',
-                (serverName) => serverName.endsWith('.com.')
+            await discoveryObj.discoverMapServers(lat, lon, error_m,);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
             );
             assert.isEmpty(servers);
         });
 
         it('Name filter: ends with .edu', async function () {
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
+            discoveryObj.nameFilter = (serverName) => serverName.endsWith('.edu.');
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const servers = await discoveryObj.discoverMapServers(
-                lat, lon, error_m,
-                'loc.arenaxr.org',
-                (serverName) => serverName.endsWith('.edu.')
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
             );
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
