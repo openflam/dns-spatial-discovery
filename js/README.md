@@ -8,8 +8,8 @@ Include the bundled `./dist/main.js` as a script:
 
 And then the library can be use in javascript as:
 ```javascript
-const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
-const servers = await discoveryObj.getServersAddrs(lat=44.4, lon=-79.6, error_m=5);
+const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
+const servers = await discoveryObj.discoverMapServers(lat=44.4, lon=-79.6, error_m=5);
 
 // Expected output is the list of servers that provide localization service in this region. Example:
 [

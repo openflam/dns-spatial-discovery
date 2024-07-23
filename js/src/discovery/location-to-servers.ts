@@ -2,7 +2,7 @@ import { CONFIG } from '../config';
 import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain';
 
-class LocationToServerAddr {
+class MapsDiscovery {
     // The DNS object to use for querying DNS records
     dnsObj: DNS;
 
@@ -23,7 +23,7 @@ class LocationToServerAddr {
      * @param suffix The suffix to append to the geo domains. Default is from the config file.
      * @returns Domains to query for the given location.
      */
-    async getServersAddrs(
+    async discoverMapServers(
         lat: number, lon: number,
         error_m: number,
         suffix: string = CONFIG.GEO_DOMAIN_SUFFIX,
@@ -58,4 +58,4 @@ class LocationToServerAddr {
     }
 }
 
-export { LocationToServerAddr };
+export { MapsDiscovery };

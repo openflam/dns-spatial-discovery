@@ -7,8 +7,8 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
-            const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
+            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -19,8 +19,8 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
-            const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
-            const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
+            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -35,15 +35,15 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
-            const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
+            discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
+            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
         });
 
         it('Should return the correct servers for a location 1 (CMU CIC 2300 Cubilces)', async function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
+            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -54,7 +54,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
-            const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
+            const servers = await discoveryObj.discoverMapServers(lat, lon, error_m);
             const expectedServers = [
                 "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
@@ -65,7 +65,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const servers = await discoveryObj.getServersAddrs(
+            const servers = await discoveryObj.discoverMapServers(
                 lat, lon, error_m,
                 'loc.arenaxr.org',
                 (serverName) => serverName.endsWith('.com.')
@@ -77,7 +77,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const servers = await discoveryObj.getServersAddrs(
+            const servers = await discoveryObj.discoverMapServers(
                 lat, lon, error_m,
                 'loc.arenaxr.org',
                 (serverName) => serverName.endsWith('.edu.')
