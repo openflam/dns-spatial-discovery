@@ -9,10 +9,12 @@
   "main": "dist/bundle.js",
   "scripts": {
     "build": "webpack --mode production",
+    "buildTest": "webpack --config webpack.test.config.js --mode production",
     "serve": "http-server . --port 9000 -o /test/test.html",
-    "test": "npm run build && npm run serve"
+    "test": "npm run build && npm run buildTest && npm run serve"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.22.0",
     "chai": "^4.4.1",
     "http-server": "^14.1.1",
     "mocha": "^10.6.0",
@@ -23,6 +25,7 @@
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "s2-geometry": "^1.2.10"
   },
   "publishConfig": {

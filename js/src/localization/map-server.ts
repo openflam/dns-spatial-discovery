@@ -1,3 +1,5 @@
+import axios from "../axiosInstance";
+
 class Pose {
     poseMatrix: number[][];
 }
@@ -29,6 +31,19 @@ class MapServer {
 
     // Errors associated with the poses in poseList compared to the VIO poses.
     errorsWithVIO: number[];
+
+    // Get server capabilities
+    async queryCapabilities(): Promise<string[]> {
+        const url = `https://${this.name}/capabilities`;
+        try {
+            const response = await axios.get(url);
+            this.capabilities = response.data;
+        }
+        catch (error) {
+            // If there is an error, capabilities remains as it was before.
+        }
+        return this.capabilities;
+    }
 }
 
 export { MapServer, Pose, WayPoint };
