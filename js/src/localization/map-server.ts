@@ -32,6 +32,10 @@ class MapServer {
     // Errors associated with the poses in poseList compared to the VIO poses.
     errorsWithVIO: number[];
 
+    constructor(name: string) {
+        this.name = name;
+    }
+
     // Get server capabilities
     async queryCapabilities(): Promise<string[]> {
         const url = `https://${this.name}/capabilities`;

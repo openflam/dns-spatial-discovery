@@ -1,7 +1,6 @@
 describe('MapServer', function () {
     it('Query capablities should work', async function () {
-        let mapServer = new dnsspatialdiscovery.MapServer();
-        mapServer.name = "mock-map-server.com";
+        let mapServer = new dnsspatialdiscovery.MapServer("mock-map-server.com");
         await mapServer.queryCapabilities();
 
         let expectedCapabilities = [

@@ -47,8 +47,7 @@ class MapsDiscovery {
                         if (recordDataJSON.type === 'MCNAME') {
                             let name = recordDataJSON.data;
                             if (nameFilter(name)) {
-                                let mapServer = new MapServer();
-                                mapServer.name = name;
+                                let mapServer = new MapServer(name);
                                 this.mapServers[name] = mapServer;
                             }
                         }
