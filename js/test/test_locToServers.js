@@ -10,7 +10,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -22,7 +22,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -45,7 +45,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const error_m = 5;
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -56,7 +56,34 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const error_m = 5;
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
+            ]
+            assert.sameMembers(servers, expectedServers);
+        });
+
+        it('Name filter: ends with .com', async function () {
+            const lat = 40.444034531976556;
+            const lon = -79.94661290569255;
+            const error_m = 5;
+            const servers = await discoveryObj.getServersAddrs(
+                lat, lon, error_m,
+                'loc.arenaxr.org',
+                (serverName) => serverName.endsWith('.com.')
+            );
+            assert.isEmpty(servers);
+        });
+
+        it('Name filter: ends with .edu', async function () {
+            const lat = 40.444034531976556;
+            const lon = -79.94661290569255;
+            const error_m = 5;
+            const servers = await discoveryObj.getServersAddrs(
+                lat, lon, error_m,
+                'loc.arenaxr.org',
+                (serverName) => serverName.endsWith('.edu.')
+            );
+            const expectedServers = [
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });

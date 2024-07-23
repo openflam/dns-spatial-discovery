@@ -9,8 +9,8 @@ Uses the DNS to discover localization servers near a GPS location. This reposito
 | Geodomain DNS query    | :white_check_mark: | :white_check_mark: |
 | DNS Cache              | :white_check_mark: | :white_check_mark: |
 | DNS query depth        | :x:                | :x:                |
-| TXT record unwrapping  | :x:                | :x:                |
-| Name-based fitering    | :x:                | :x:                |
+| TXT record unwrapping  | :white_check_mark: | :x:                |
+| Name-based fitering    | :white_check_mark: | :x:                |
 | Name-based priority    | :x:                | :x:                |
 | Map server negotiation | :x:                | :x:                |
 | Localization           | :x:                | :x:                |

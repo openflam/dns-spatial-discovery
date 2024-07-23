@@ -6,8 +6,13 @@ class LocationToServerAddr {
     // The DNS object to use for querying DNS records
     dnsObj: DNS;
 
-    constructor() {
+    // Name-based filter to apply to the list of servers
+    nameFilter: (name: string) => boolean;
+
+    constructor(nameFilter: (name: string) => boolean | null = null) {
         this.dnsObj = new DNS();
+        // No name-based filter by default
+        this.nameFilter = nameFilter || ((name: string) => true);
     }
 
     /**
@@ -18,7 +23,12 @@ class LocationToServerAddr {
      * @param suffix The suffix to append to the geo domains. Default is from the config file.
      * @returns Domains to query for the given location.
      */
-    async getServersAddrs(lat: number, lon: number, error_m: number, suffix: string = CONFIG.GEO_DOMAIN_SUFFIX): Promise<string[]> {
+    async getServersAddrs(
+        lat: number, lon: number,
+        error_m: number,
+        suffix: string = CONFIG.GEO_DOMAIN_SUFFIX,
+        nameFilter: (name: string) => boolean | null = this.nameFilter
+    ): Promise<string[]> {
         const geoDomains = LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
         const serverAddrs: string[] = [];
         for (const domain of geoDomains) {
@@ -26,7 +36,17 @@ class LocationToServerAddr {
                 const result = await this.dnsObj.dnsLookup(domain, 'TXT');
                 for (const record of result) {
                     if ('data' in record) {
-                        serverAddrs.push(record.data);
+                        let recordData = record.data;
+                        const jsonString = recordData
+                            .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Add double quotes around keys
+                            .replace(/:([a-zA-Z0-9_.]+)/g, ':"$1"') // Add double quotes around values
+                        const recordDataJSON = JSON.parse(jsonString);
+                        if (recordDataJSON.type === 'MCNAME') {
+                            let name = recordDataJSON.data;
+                            if (nameFilter(name)) {
+                                serverAddrs.push(name);
+                            }
+                        }
                     }
                 }
             } catch (error) {
