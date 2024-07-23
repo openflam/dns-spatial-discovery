@@ -26,7 +26,14 @@ class LocationToServerAddr {
                 const result = await this.dnsObj.dnsLookup(domain, 'TXT');
                 for (const record of result) {
                     if ('data' in record) {
-                        serverAddrs.push(record.data);
+                        let recordData = record.data;
+                        const jsonString = recordData
+                            .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Add double quotes around keys
+                            .replace(/:([a-zA-Z0-9_.]+)/g, ':"$1"') // Add double quotes around values
+                        const recordDataJSON = JSON.parse(jsonString);
+                        if (recordDataJSON.type === 'MCNAME') {
+                            serverAddrs.push(recordDataJSON.data);
+                        }
                     }
                 }
             } catch (error) {

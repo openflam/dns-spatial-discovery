@@ -10,7 +10,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -22,7 +22,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const discoveryObj = new dnsspatialdiscovery.LocationToServerAddr();
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -45,7 +45,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const error_m = 5;
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -56,7 +56,7 @@ describe('Location to Servers (temporary tests - dependent on DNS servers)', fun
             const error_m = 5;
             const servers = await discoveryObj.getServersAddrs(lat, lon, error_m);
             const expectedServers = [
-                "{type:MCNAME,data:cicmaps.wiselambda4.andrew.cmu.edu.}"
+                "cicmaps.wiselambda4.andrew.cmu.edu."
             ]
             assert.sameMembers(servers, expectedServers);
         });
