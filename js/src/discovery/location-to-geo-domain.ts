@@ -1,4 +1,4 @@
-import { CONFIG } from './config';
+import { CONFIG } from '../config';
 import { S2 } from 's2-geometry';
 
 class LocationToGeoDomain {

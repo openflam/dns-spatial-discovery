@@ -1,4 +1,4 @@
-import { CONFIG } from './config';
+import { CONFIG } from '../config';
 import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain';
 
