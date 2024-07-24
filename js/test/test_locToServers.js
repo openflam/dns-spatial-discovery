@@ -7,8 +7,7 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            discoveryObj.rootNameServer = "https://cmu-nameserver.cmu.edu";
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
             await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
@@ -23,8 +22,7 @@ describe('Location to Servers', function () {
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            discoveryObj.rootNameServer = "https://cmu-nameserver.cmu.edu";
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
             await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
@@ -43,8 +41,7 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            discoveryObj.rootNameServer = "https://cmu-nameserver.cmu.edu";
+            discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
             await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
         });
 
@@ -79,8 +76,7 @@ describe('Location to Servers', function () {
 
     describe('Name filter', function () {
         it('Name filter: ends with .edu', async function () {
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            discoveryObj.rootNameServer = "https://cmu-nameserver.cmu.edu";
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
             discoveryObj.nameFilter = (serverName) => serverName.endsWith('.edu');
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
@@ -93,8 +89,7 @@ describe('Location to Servers', function () {
         });
 
         it('Name filter: ends with .com', async function () {
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-            discoveryObj.rootNameServer = "https://cmu-nameserver.cmu.edu";
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
             discoveryObj.nameFilter = (serverName) => serverName.endsWith('.com');
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
