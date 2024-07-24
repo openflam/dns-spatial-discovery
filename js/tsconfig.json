@@ -1,11 +1,11 @@
 {
     "compilerOptions": {
         "outDir": "./dist/",
-        "module": "NodeNext",
-        "target": "ES5",
+        "module": "ESNext",
+        "target": "ES6",
         "allowJs": true,
         "noImplicitAny": true,
         "esModuleInterop": true,
-        "moduleResolution": "NodeNext",
+        "moduleResolution": "Bundler",
     }
 }
