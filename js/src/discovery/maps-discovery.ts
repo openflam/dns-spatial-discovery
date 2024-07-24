@@ -142,8 +142,10 @@ class MapsDiscovery {
             if (name.endsWith('.')) {
                 name = name.slice(0, -1);
             }
-            let nameserver = new Nameserver(`https://${name}`);
-            this.nameserverQueue.add(nameserver);
+            if (this.nameFilter(name)) {
+                let nameserver = new Nameserver(`https://${name}`);
+                this.nameserverQueue.add(nameserver);
+            }
         }
     }
 }
