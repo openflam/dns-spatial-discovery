@@ -111,4 +111,4 @@ class MapServer {
     }
 }
 
-export { MapServer, Pose, WayPoint, LocalizationResponse };
+export { MapServer, Pose, WayPoint, LocalizationResponse, LocalizationData };

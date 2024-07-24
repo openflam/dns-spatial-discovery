@@ -7,8 +7,8 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -22,8 +22,8 @@ describe('Location to Servers', function () {
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -41,8 +41,8 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
         });
 
         it('Should return the correct servers for a location 1 (CMU CIC 2300 Cubilces)', async function () {
@@ -76,12 +76,12 @@ describe('Location to Servers', function () {
 
     describe('Name filter', function () {
         it('Name filter: ends with .edu', async function () {
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
             discoveryObj.nameFilter = (serverName) => serverName.endsWith('.edu');
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -89,12 +89,12 @@ describe('Location to Servers', function () {
         });
 
         it('Name filter: ends with .com', async function () {
-            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://cmu-nameserver.cmu.edu");
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
             discoveryObj.nameFilter = (serverName) => serverName.endsWith('.com');
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            await discoveryObj.discoverMapServers(lat, lon, error_m);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );

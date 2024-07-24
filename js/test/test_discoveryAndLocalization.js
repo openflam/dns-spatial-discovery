@@ -6,12 +6,11 @@ describe('Map Discovery and Localization', function () {
     }
 
     it('MNS records should work', async function () {
-        const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("https://loc-nameserver.net");
+        const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://loc-nameserver.net");
         await discoveryObj.discoverMapServers(
             arenaCoords.lat,
             arenaCoords.lon,
-            arenaCoords.error_m,
-            'loc.'
+            arenaCoords.error_m
         );
         const servers = Object.values(discoveryObj.mapServers).map(
             (mapServer) => mapServer.name
