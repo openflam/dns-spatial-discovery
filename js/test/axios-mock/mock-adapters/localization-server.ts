@@ -21,6 +21,17 @@ function mockLocalizationServer(mockAdapter: MockAdapter) {
             position: [5.70, 4.84, 6.7]
         }
     ]);
+
+    // Mock localization
+    mockAdapter.onPost(`${mockServerURL}/localize/image`).reply(200, {
+        pose: [
+            [1, 0, 0, 1.56],
+            [0, 1, 0, 5.6],
+            [0, 0, 1, 7.6],
+            [0, 0, 0, 1]
+        ],
+        confidence: 0.9
+    });
 }
 
 export { mockLocalizationServer };
