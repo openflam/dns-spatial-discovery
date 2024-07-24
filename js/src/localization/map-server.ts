@@ -48,6 +48,18 @@ class MapServer {
         }
         return this.capabilities;
     }
+
+    async queryWaypoints(): Promise<WayPoint[]> {
+        const url = `https://${this.name}/waypoints`;
+        try {
+            const response = await axios.get(url);
+            this.waypointsList = response.data;
+        }
+        catch (error) {
+            // If there is an error, waypointsList remains as it was before.
+        }
+        return this.waypointsList;
+    }
 }
 
 export { MapServer, Pose, WayPoint };

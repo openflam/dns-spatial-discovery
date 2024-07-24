@@ -9,6 +9,18 @@ function mockLocalizationServer(mockAdapter: MockAdapter) {
         "uwb-beacon",
         "qr-code"
     ]);
+
+    // Mock get waypoints
+    mockAdapter.onGet(`${mockServerURL}/waypoints`).reply(200, [
+        {
+            name: "waypoint1",
+            position: [1.56, 5.6, 7.6]
+        },
+        {
+            name: "waypoint2",
+            position: [5.70, 4.84, 6.7]
+        }
+    ]);
 }
 
 export { mockLocalizationServer };
