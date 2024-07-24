@@ -100,15 +100,13 @@ class MapsDiscovery {
         nameserver: Nameserver
     ): Promise<{ [name: string]: MapServer }> {
         const geoDomains = LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
+        let dnsLookupPromises: { [name: string]: Promise<DNSRecord[]> } = {};
+        // Run all DNS lookups in parallel
         for (const domain of geoDomains) {
-            let dnsLookupResults = null;
-            try {
-                dnsLookupResults = await nameserver.lookup(domain, 'TXT');
-            }
-            catch (error) {
-                console.log(error);
-                continue;
-            }
+            dnsLookupPromises[domain] = nameserver.lookup(domain, 'TXT');
+        }
+        for (const domain in dnsLookupPromises) {
+            let dnsLookupResults = await dnsLookupPromises[domain];
             for (const record of dnsLookupResults) {
                 this.updateMapServersFromDNSRecord(record);
             }

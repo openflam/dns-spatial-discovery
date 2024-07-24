@@ -15,3 +15,4 @@ Uses the DNS to discover localization servers near a GPS location. This reposito
 | Name-based priority    | :x:                | :x:                |
 | Map server negotiation | :white_check_mark: | :x:                |
 | Localization           | :white_check_mark: | :x:                |
+| Parallel DNS lookups   | :x:                | :x:                |
