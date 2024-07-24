@@ -60,6 +60,8 @@ describe('MapServer', function () {
             [0, 0, 0, 1.00]
         ];
         let poseData = await mapServer.localize(emptyBlob, "image", vioData);
+
+        // First call
         let expectedPoseData = {
             serverConfidence: 0.9,
             pose: [
@@ -69,13 +71,15 @@ describe('MapServer', function () {
                 [0, 0, 0, 1.00]
             ],
             vioPose: vioData,
-            errorWithVIO: 2.218287627878765
+            errorWithVIO: Infinity // Infinity since no past history is available
         };
 
-        assert.equal(poseData.serverConfidence, expectedPoseData.serverConfidence);
-        assert.deepEqual(poseData.pose, expectedPoseData.pose);
-        assert.deepEqual(poseData.vioPose, expectedPoseData.vioPose);
-        assert.closeTo(poseData.errorWithVIO, expectedPoseData.errorWithVIO, 0.0001);
+        assert.deepEqual(poseData, expectedPoseData);
+
+        // Second call
+        poseData = await mapServer.localize(emptyBlob, "image", vioData);
+        expectedPoseData.errorWithVIO = 0.0;
+        assert.deepEqual(poseData, expectedPoseData);
     });
 
     it('Localization request should raise error if capability is not supported', async function () {

@@ -1,5 +1,5 @@
 import axios from "../axiosInstance";
-import { queryLocalize, errorBetweenPoses } from "./localize";
+import { queryLocalize, errorWithVIO } from "./localize";
 
 // Pose is a 2D array of numbers. It represents the position and orientation.
 type Pose = number[][];
@@ -92,9 +92,11 @@ class MapServer {
         if ('confidence' in localizationResponse) {
             localizationData.serverConfidence = localizationResponse.confidence;
         }
+
         if (currentVIOPose) {
             localizationData.vioPose = currentVIOPose;
-            localizationData.errorWithVIO = errorBetweenPoses(pose, currentVIOPose);
+            let error = errorWithVIO(this, localizationData);
+            localizationData.errorWithVIO = error;
         }
 
         this.localizationDataList.push(localizationData);
