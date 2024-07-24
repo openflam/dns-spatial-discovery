@@ -1,3 +1,4 @@
+import axios from "../axiosInstance";
 import { CONFIG } from "../config";
 
 interface DNSRecord {
@@ -6,7 +7,19 @@ interface DNSRecord {
     timestamp?: number;
     error?: string;
     fromCache?: boolean;
-}
+};
+
+interface DNSResponseRecord {
+    name: string;
+    type: number;
+    TTL: number;
+    data: string;
+};
+
+interface DNSResponse {
+    Answer?: DNSResponseRecord[];
+    Authority?: DNSResponseRecord[];
+};
 
 class DNS {
     // Cache to store the IP and CNAME of domains.
@@ -110,13 +123,13 @@ class DNS {
             }
             return cached_records;
         }
-        const url = `${this.dohUrl}?name=${domain}&type=${type}`;
         try {
-            const response = await fetch(url, { headers: { accept: 'application/dns-json' } });
-            if (!response.ok) {
-                throw new Error('DoH request failed!');
-            }
-            const data = await response.json();
+            const response = await axios.get(this.dohUrl,
+                {
+                    params: { name: domain, type: type },
+                    headers: { accept: 'application/dns-json' }
+                });
+            const data: DNSResponse = response.data;
 
             // Check if the response contains the requested record type and return the first one
             // If no record of the requested type is found, throw an error

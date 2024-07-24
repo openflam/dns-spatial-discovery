@@ -16,6 +16,7 @@
   "devDependencies": {
     "axios-mock-adapter": "^1.22.0",
     "chai": "^4.4.1",
+    "dns-zonefile": "^0.3.2",
     "http-server": "^14.1.1",
     "mocha": "^10.6.0",
     "opn-cli": "^5.0.0",
