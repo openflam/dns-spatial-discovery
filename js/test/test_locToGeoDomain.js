@@ -39,7 +39,7 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 5;
-        const geoDomains = dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(lat, lon, error_m);
+        const geoDomains = dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(lat, lon, error_m, 'loc.arenaxr.org');
 
         const expectedGeoDomains = [
             '0.2.3.1.0.2.3.3.3.0.0.1.2.3.1.2.2.1.0.0.1.4.loc.arenaxr.org',

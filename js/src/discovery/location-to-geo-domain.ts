@@ -81,7 +81,7 @@ class LocationToGeoDomain {
         return digits;
     }
 
-    static formAddressFromDigits(digits: string[], suffix: string = CONFIG.GEO_DOMAIN_SUFFIX): string {
+    static formAddressFromDigits(digits: string[], suffix: string): string {
         return digits.join('.') + '.' + suffix;
     }
 
@@ -93,7 +93,7 @@ class LocationToGeoDomain {
      * @param {String} suffix The suffix to append to the geo domains. Default is from the config file.
      * @returns Geo domains for the given location. Includes the base geo domain, siblings and all parent geo domains.
      */
-    static getGeoDomains(lat: number, lon: number, error_m: number, suffix: string = CONFIG.GEO_DOMAIN_SUFFIX): string[] {
+    static getGeoDomains(lat: number, lon: number, error_m: number, suffix: string): string[] {
         const baseGeoDigits = LocationToGeoDomain.getBaseGeoDomain(lat, lon, error_m);
         const geoDomains: string[] = [];
 

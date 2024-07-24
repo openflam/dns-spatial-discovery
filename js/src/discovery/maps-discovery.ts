@@ -30,7 +30,7 @@ class MapsDiscovery {
     async discoverMapServers(
         lat: number, lon: number,
         error_m: number,
-        suffix: string = CONFIG.GEO_DOMAIN_SUFFIX,
+        suffix: string,
         nameFilter: (name: string) => boolean | null = this.nameFilter
     ): Promise<{ [name: string]: MapServer }> {
         const geoDomains = LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
