@@ -2,10 +2,14 @@ import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain';
 import { MapServer } from '../localization/map-server';
 import { DNSRecord } from './dns';
+import { CONFIG } from '../config';
 
 class MapsDiscovery {
     // The DNS object to use for querying DNS records
     dnsObj: DNS;
+
+    // Root name server
+    rootNameServer: string = CONFIG.DoH_URL;
 
     // Name-based filter to apply to the list of servers
     nameFilter: (name: string) => boolean;
@@ -36,7 +40,7 @@ class MapsDiscovery {
         for (const domain of geoDomains) {
             let dnsLookupResults = null;
             try {
-                dnsLookupResults = await this.dnsObj.dnsLookup(domain, 'TXT');
+                dnsLookupResults = await this.dnsObj.dnsLookup(domain, 'TXT', this.rootNameServer);
             }
             catch (error) {
                 console.log(error);

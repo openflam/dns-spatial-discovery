@@ -41,11 +41,9 @@ class DNS {
         29: 'LOC'
     };
 
-    dohUrl: string;
     negativeCachingEnabled: boolean;
 
-    constructor(dohUrl: string = CONFIG.DoH_URL, negativeCachingEnabled: boolean = CONFIG.NEGATIVE_CACHING_ENABLED) {
-        this.dohUrl = dohUrl;
+    constructor(negativeCachingEnabled: boolean = CONFIG.NEGATIVE_CACHING_ENABLED) {
         this.negativeCachingEnabled = negativeCachingEnabled;
     }
 
@@ -117,7 +115,7 @@ class DNS {
      * - timestamp: The time when the record was fetched if it is in the cache
      * - fromCache: true if the record was fetched from the cache
      */
-    async dnsLookup(domain: string, type: string): Promise<DNSRecord[]> {
+    async dnsLookup(domain: string, type: string, dohUrl: string = CONFIG.DoH_URL): Promise<DNSRecord[]> {
         if (!Object.values(DNS.DNS_TYPE_ID_TO_NAME).includes(type)) {
             throw new Error(`Unsupported DNS record type: ${type}. Supported types: ${Object.values(DNS.DNS_TYPE_ID_TO_NAME).join(', ')}`);
         }
@@ -131,7 +129,7 @@ class DNS {
 
         let dnsResponse: DNSResponse;
         try {
-            const response = await axios.get(this.dohUrl,
+            const response = await axios.get(dohUrl,
                 {
                     params: { name: domain, type: type },
                     headers: { accept: 'application/dns-json' }
