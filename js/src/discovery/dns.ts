@@ -128,70 +128,76 @@ class DNS {
             }
             return cached_records;
         }
+
+        let dnsResponse: DNSResponse;
         try {
             const response = await axios.get(this.dohUrl,
                 {
                     params: { name: domain, type: type },
                     headers: { accept: 'application/dns-json' }
                 });
-            const data: DNSResponse = response.data;
-
-            // Check if the response contains the requested record type and return the first one
-            // If no record of the requested type is found, throw an error
-            if ('Answer' in data && data.Answer.length > 0) {
-                let recordsToReturn: DNSRecord[] = [];
-                for (let record of data.Answer) {
-                    // Add to cache
-                    if (record.type in DNS.DNS_TYPE_ID_TO_NAME) {
-                        this.addRecordToCache(domain, DNS.DNS_TYPE_ID_TO_NAME[record.type], record);
-                    }
-                    if (DNS.DNS_TYPE_ID_TO_NAME[record.type] === type) {
-                        recordsToReturn.push(record);
-                    }
-                }
-                if (recordsToReturn.length > 0) {
-                    return recordsToReturn;
-                }
-            }
-            // If no answer is found, cache the negative result if negative caching is enabled
-            if ('Authority' in data && data.Authority.length > 0 && this.negativeCachingEnabled) {
-                let soa_record: DNSRecord | null = null;
-                for (let record of data.Authority) {
-                    if (record.type === 6) {
-                        soa_record = record;
-                        break;
-                    }
-                }
-                if (soa_record) {
-                    const soa_record_data = soa_record.data!.split(' ');
-                    // Negative caching TTL is minimum of the MINIMUM field in SOA record
-                    // and the TTL of the SOA record itself. RFC 2308.
-                    const minimum_soa_ttl = Number(soa_record_data[soa_record_data.length - 1]);
-                    const soa_ttl = Number(soa_record.TTL);
-                    const negative_caching_ttl = Math.min(minimum_soa_ttl, soa_ttl);
-                    let negativeRecord: DNSRecord = {
-                        error: 'NO-ANSWER',
-                        TTL: negative_caching_ttl
-                    }
-                    this.addRecordToCache(domain, type, negativeRecord);
-                    return [negativeRecord];
-                }
-            } else if (this.negativeCachingEnabled) {
-                let errorRecord: DNSRecord = {
-                    error: 'NO-AUTHORITY',
-                    TTL: CONFIG.DEFAULT_NEGATIVE_CACHING_TTL
-                }
-                this.addRecordToCache(domain, type, errorRecord);
-                return [errorRecord];
-            }
+            dnsResponse = response.data;
         } catch (error) {
             let errorRecord: DNSRecord = {
-                error: 'UNKNOWN-ERROR-OCCURED',
+                error: 'DOH-REQUEST-ERROR',
                 TTL: CONFIG.DEFAULT_NEGATIVE_CACHING_TTL
             }
             if (this.negativeCachingEnabled) {
                 this.addRecordToCache(domain, type, errorRecord);
             }
+            return [errorRecord];
+        }
+
+        // Check if the response contains the requested record type and return the first one
+        // If no record of the requested type is found, throw an error
+        if ('Answer' in dnsResponse && dnsResponse.Answer.length > 0) {
+            let recordsToReturn: DNSRecord[] = [];
+            for (let record of dnsResponse.Answer) {
+                // Add to cache
+                if (record.type in DNS.DNS_TYPE_ID_TO_NAME) {
+                    this.addRecordToCache(domain, DNS.DNS_TYPE_ID_TO_NAME[record.type], record);
+                }
+                if (DNS.DNS_TYPE_ID_TO_NAME[record.type] === type) {
+                    recordsToReturn.push(record);
+                }
+            }
+            if (recordsToReturn.length > 0) {
+                return recordsToReturn;
+            }
+        }
+
+        // If no answer is found, cache the negative result if negative caching is enabled
+        else if ('Authority' in dnsResponse && dnsResponse.Authority.length > 0 && this.negativeCachingEnabled) {
+            let soa_record: DNSRecord | null = null;
+            for (let record of dnsResponse.Authority) {
+                if (record.type === 6) {
+                    soa_record = record;
+                    break;
+                }
+            }
+            if (soa_record) {
+                const soa_record_data = soa_record.data!.split(' ');
+                // Negative caching TTL is minimum of the MINIMUM field in SOA record
+                // and the TTL of the SOA record itself. RFC 2308.
+                const minimum_soa_ttl = Number(soa_record_data[soa_record_data.length - 1]);
+                const soa_ttl = Number(soa_record.TTL);
+                const negative_caching_ttl = Math.min(minimum_soa_ttl, soa_ttl);
+                let negativeRecord: DNSRecord = {
+                    error: 'NO-ANSWER',
+                    TTL: negative_caching_ttl
+                }
+                this.addRecordToCache(domain, type, negativeRecord);
+                return [negativeRecord];
+            }
+        }
+
+        // If no-authority record is returned, cache the no-authority error
+        else if (this.negativeCachingEnabled) {
+            let errorRecord: DNSRecord = {
+                error: 'NO-AUTHORITY',
+                TTL: CONFIG.DEFAULT_NEGATIVE_CACHING_TTL
+            }
+            this.addRecordToCache(domain, type, errorRecord);
             return [errorRecord];
         }
     }
