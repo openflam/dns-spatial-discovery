@@ -1,6 +1,7 @@
 import axios from "../axiosInstance";
 import { CONFIG } from "../config";
 
+// DNS record object stored in the cache and returned by the DNS lookup function.
 interface DNSRecord {
     data?: string;
     TTL: number;
@@ -9,6 +10,7 @@ interface DNSRecord {
     fromCache?: boolean;
 };
 
+// DNS response record object returned by the DoH request.
 interface DNSResponseRecord {
     name: string;
     type: number;
@@ -16,6 +18,7 @@ interface DNSResponseRecord {
     data: string;
 };
 
+// DNS response object returned by the DoH request.
 interface DNSResponse {
     Answer?: DNSResponseRecord[];
     Authority?: DNSResponseRecord[];
@@ -65,29 +68,31 @@ class DNS {
      * 
      */
     getRecordFromCache(domain: string, type: string): DNSRecord[] | null {
-        if (domain in this.cache && type in this.cache[domain]) {
-            let cached_records = this.cache[domain][type];
+        if (!(domain in this.cache) || !(type in this.cache[domain])) {
+            return null;
+        }
 
-            let recordsToReturn: DNSRecord[] = [];
-            let recordIndicesToRemove: number[] = [];
-            for (let i = 0; i < cached_records.length; i++) {
-                let record = cached_records[i];
-                if ((Date.now() - record.timestamp!) < record.TTL * 1000) {
-                    recordsToReturn.push(record);
-                }
-                // Mark record to be removed if TTL has expired
-                else {
-                    recordIndicesToRemove.push(i);
-                }
-            }
-            // Remove records with expired TTL
-            cached_records = cached_records.filter((record, index) => !recordIndicesToRemove.includes(index));
-            this.cache[domain][type] = cached_records;
+        let cached_records = this.cache[domain][type];
 
-            // Return the records if there are any
-            if (recordsToReturn.length > 0) {
-                return recordsToReturn;
+        let recordsToReturn: DNSRecord[] = [];
+        let recordIndicesToRemove: number[] = [];
+        for (let i = 0; i < cached_records.length; i++) {
+            let record = cached_records[i];
+            if ((Date.now() - record.timestamp!) < record.TTL * 1000) {
+                recordsToReturn.push(record);
             }
+            // Mark record to be removed if TTL has expired
+            else {
+                recordIndicesToRemove.push(i);
+            }
+        }
+        // Remove records with expired TTL
+        cached_records = cached_records.filter((record, index) => !recordIndicesToRemove.includes(index));
+        this.cache[domain][type] = cached_records;
+
+        // Return the records if there are any
+        if (recordsToReturn.length > 0) {
+            return recordsToReturn;
         }
         return null;
     }
@@ -192,4 +197,4 @@ class DNS {
     }
 }
 
-export { DNS };
+export { DNS, DNSRecord };

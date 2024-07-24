@@ -1,7 +1,7 @@
-import { CONFIG } from '../config';
 import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain';
 import { MapServer } from '../localization/map-server';
+import { DNSRecord } from './dns';
 
 class MapsDiscovery {
     // The DNS object to use for querying DNS records
@@ -30,35 +30,44 @@ class MapsDiscovery {
     async discoverMapServers(
         lat: number, lon: number,
         error_m: number,
-        suffix: string,
-        nameFilter: (name: string) => boolean | null = this.nameFilter
+        suffix: string
     ): Promise<{ [name: string]: MapServer }> {
         const geoDomains = LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
         for (const domain of geoDomains) {
+            let dnsLookupResults = null;
             try {
-                const result = await this.dnsObj.dnsLookup(domain, 'TXT');
-                for (const record of result) {
-                    if ('data' in record) {
-                        let recordData = record.data;
-                        const jsonString = recordData
-                            .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Add double quotes around keys
-                            .replace(/:([a-zA-Z0-9_.]+)/g, ':"$1"') // Add double quotes around values
-                        const recordDataJSON = JSON.parse(jsonString);
-                        if (recordDataJSON.type === 'MCNAME') {
-                            let name = recordDataJSON.data;
-                            if (nameFilter(name)) {
-                                let mapServer = new MapServer(name);
-                                this.mapServers[name] = mapServer;
-                            }
-                        }
-                    }
-                }
-            } catch (error) {
+                dnsLookupResults = await this.dnsObj.dnsLookup(domain, 'TXT');
+            }
+            catch (error) {
                 console.log(error);
                 continue;
             }
+            for (const record of dnsLookupResults) {
+                this.updateMapServersFromDNSRecord(record);
+            }
         }
         return this.mapServers;
+    }
+
+    updateMapServersFromDNSRecord(record: DNSRecord) {
+        if (!('data' in record)) {
+            return;
+        }
+        // Parse the data field as JSON
+        let recordData = record.data;
+        const jsonString = recordData
+            .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Add double quotes around keys
+            .replace(/:([a-zA-Z0-9_.]+)/g, ':"$1"') // Add double quotes around values
+        const recordDataJSON = JSON.parse(jsonString);
+
+        // Update map servers list if the record is of type MCNAME
+        if (recordDataJSON.type === 'MCNAME') {
+            let name = recordDataJSON.data;
+            if (this.nameFilter(name)) {
+                let mapServer = new MapServer(name);
+                this.mapServers[name] = mapServer;
+            }
+        }
     }
 }
 
