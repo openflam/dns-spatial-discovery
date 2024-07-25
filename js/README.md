@@ -1,18 +1,35 @@
 # Javascript DNS spatial discovery
 
 ## Usage
-Include the bundled `./dist/main.js` as a script:
-```html
-<script src="./dist/main.js"></script>
+
+### Installation
+The npm package is hosted within the `openvps` scope on Github npm registry.
+
+```sh
+npm login --scope=@openvps --registry=https://npm.pkg.github.com
+<Login with your PERSONAL username and password>
+npm install @openvps/dnsspatialdiscovery@1.0.2
 ```
 
 And then the library can be use in javascript as:
 ```javascript
-const discoveryObj = new dnsspatialdiscovery.MapsDiscovery();
-const servers = await discoveryObj.discoverMapServers(lat=44.4, lon=-79.6, error_m=5);
+const suffix = "loc." // Suffix to the discovered geodomains
+const rootNameserver = "https://loc-nameserver.net";
+const discoveryObj = new dnsspatialdiscovery.MapsDiscovery(suffix, rootNameserver);
 
-// Expected output is the list of MapServer objects. Each MapServer object has all the data
-// and metadata associated with the map servers discovered.
+let localizationType = "image";
+// Get lat, lon, error_m, vioPose, dataBlob
+var localizationResult = discoveryObj.localize(
+    lat, lon, error_m,
+    dataBlob, localizationType, vioPose);
+```
+
+The `localize` function:
+- Disocvers map servers if they have not been discovered yet.
+- Uses the currently "active server" -- The server that has been giving good localization result to localize.
+- If the active server gives results with a high error, tries to relocalize within the list of discovered servers.
+- If best localization result provided all the discovered is high, rediscovered servers and relocalizes.
+- If no servers are discovered, returns null.
 
 ## Development
 
@@ -22,4 +39,4 @@ To install dependencies: `npm install` and to build `npm run build`.
 
 ## Testing
 
-Run tests using: `npm run test`. It'll start a server at [http://localhost:9000]. Navigate to `/test/test.html` to view the rest results.
+Run tests using: `npm run test`. It'll start a server at http://localhost:9000. Navigate to `/test/test.html` to view the rest results.
