@@ -36,23 +36,29 @@ function handleRequest(requestName: string, requestType: string, zoneJSON: DNSZo
     let matched = false;
 
     // Check if a match is found against a TXT record
-    if (requestType === 'TXT') {
-        zoneJSON.txt.forEach((txtRecord) => {
-            let fullRecordName = txtRecord.name + '.' + origin;
-            if (requestName === fullRecordName) {
-                response = {
-                    Answer: [
-                        {
-                            name: fullRecordName,
-                            type: 16, // TXT record
-                            TTL: TTL,
-                            data: txtRecord.txt
-                        }
-                    ]
-                };
-                matched = true;
-            }
-        });
+    if (requestType !== 'TXT') {
+        return null;
+    }
+
+    let answers: DNSResponseRecord[] = [];
+
+    zoneJSON.txt.forEach((txtRecord) => {
+        let fullRecordName = txtRecord.name + '.' + origin;
+        if (requestName === fullRecordName) {
+            answers.push({
+                name: fullRecordName,
+                type: 16, // TXT record
+                TTL: TTL,
+                data: txtRecord.txt
+            });
+        }
+    });
+
+    if (answers.length > 0) {
+        response = {
+            Answer: answers
+        };
+        matched = true;
     }
 
     // If not, and the request lies within the zone, return the SOA record

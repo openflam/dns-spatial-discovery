@@ -13,7 +13,10 @@ describe('Location to Servers', function () {
                 (mapServer) => mapServer.name
             );
             const expectedServers = [
-                "cic-maps.com"
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -28,7 +31,10 @@ describe('Location to Servers', function () {
                 (mapServer) => mapServer.name
             );
             const expectedServers = [
-                "cic-maps.com"
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -54,7 +60,10 @@ describe('Location to Servers', function () {
                 (mapServer) => mapServer.name
             );
             const expectedServers = [
-                "cic-maps.com"
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -68,7 +77,10 @@ describe('Location to Servers', function () {
                 (mapServer) => mapServer.name
             );
             const expectedServers = [
-                "cic-maps.com"
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
             ]
             assert.sameMembers(servers, expectedServers);
         });
@@ -85,7 +97,11 @@ describe('Location to Servers', function () {
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
-            assert.isEmpty(servers);
+            const expectedServers = [
+                'arena-2300.cmu.edu',
+                'lobby-2300.cmu.edu'
+            ]
+            assert.sameMembers(servers, expectedServers);
         });
 
         it('Name filter: ends with .com', async function () {
@@ -99,7 +115,8 @@ describe('Location to Servers', function () {
                 (mapServer) => mapServer.name
             );
             const expectedServers = [
-                "cic-maps.com"
+                'cubicles-maps.com',
+                'passageway-2300.com'
             ]
             assert.sameMembers(servers, expectedServers);
         });

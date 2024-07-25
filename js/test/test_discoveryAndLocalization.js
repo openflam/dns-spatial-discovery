@@ -16,7 +16,10 @@ describe('Map Discovery and Localization', function () {
             (mapServer) => mapServer.name
         );
         const expectedServers = [
-            "cic-maps.com"
+            'arena-2300.cmu.edu',
+            'cubicles-maps.com',
+            'lobby-2300.cmu.edu',
+            'passageway-2300.com'
         ]
         assert.sameMembers(servers, expectedServers);
     });
