@@ -11,6 +11,7 @@ npm login --scope=@openvps --registry=https://npm.pkg.github.com
 npm install @openvps/dnsspatialdiscovery@1.0.2
 ```
 
+#### Discovery
 And then the library can be use in javascript as:
 ```javascript
 const suffix = "loc." // Suffix to the discovered geodomains
@@ -30,6 +31,16 @@ The `localize` function:
 - If the active server gives results with a high error, tries to relocalize within the list of discovered servers.
 - If best localization result provided all the discovered is high, rediscovered servers and relocalizes.
 - If no servers are discovered, returns null.
+
+#### No discovery
+
+You might want to skip disocvery phase if you already know which server to use. In that case:
+
+```js
+let mapServer = new dnsspatialdiscovery.MapServer("map-server.com");
+let emptyBlob = new Blob([image]);
+let poseData = await mapServer.localize(emptyBlob, "image");
+```
 
 ## Development
 
