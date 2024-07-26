@@ -1,4 +1,4 @@
-import { subtract, norm, abs } from "mathjs";
+// import { subtract, norm, abs } from "mathjs";
 import { LocalizationData, MapServer } from "./map-server";
 import { LocalizationResponse } from "./map-server";
 import axios from "../axiosInstance";
@@ -23,6 +23,18 @@ async function queryLocalize(mapServer: MapServer,
     }
 
     return responseData;
+}
+
+function subtract(a: number[], b: number[]): number[] {
+    return a.map((value, index) => value - b[index]);
+}
+
+function norm(vector: number[]): number {
+    return Math.sqrt(vector.reduce((acc, value) => acc + value * value, 0));
+}
+
+function abs(value: number): number {
+    return value < 0 ? -value : value;
 }
 
 function errorWithVIO(mapServer: MapServer, localizationData: LocalizationData): number {
@@ -50,7 +62,7 @@ function errorWithVIO(mapServer: MapServer, localizationData: LocalizationData):
     let vectorNorm = Number(norm(vector));
     let vioVectorNorm = Number(norm(vioVector));
 
-    // Calculate the ratio of the lengths of the vectors as lengthError
+    // Calculate the difference in lengths as length error
     let lengthError = abs(vectorNorm - vioVectorNorm);
 
     return lengthError;
