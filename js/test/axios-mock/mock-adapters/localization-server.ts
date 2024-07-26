@@ -23,43 +23,31 @@ interface LocalizationResponse {
 };
 
 function mockLocalizationServer(mockAdapter: MockAdapter) {
-    // Mock get capabilities
-    mockAdapter.onGet(`${mockServerURL}/capabilities`).reply(200, [
-        "image",
-        "uwb-beacon",
-        "qr-code"
-    ]);
 
-    // Mock get waypoints
-    mockAdapter.onGet(`${mockServerURL}/waypoints`).reply(200, [
-        {
-            name: "waypoint1",
-            position: [1.56, 5.6, 7.6]
-        },
-        {
-            name: "waypoint2",
-            position: [5.70, 4.84, 6.7]
-        }
-    ]);
-
-    // Mock dummy server localization
-    mockAdapter.onPost(`${mockServerURL}/localize/image`).reply(200, {
-        pose: [
-            [1, 0, 0, 1.56],
-            [0, 1, 0, 5.6],
-            [0, 0, 1, 7.6],
-            [0, 0, 0, 1]
-        ],
-        confidence: 0.9
-    });
-
-    // Mock map server localization
     for (let url in urlToMapResponse) {
+        // Mock post image
         mockAdapter.onPost(`${url}/localize/image`).reply(async (config) => {
             let imageBlob = config.data.get('image');
             let imageName = await imageBlob.text();
             return [200, urlToMapResponse[url][imageName]];
         });
+
+        // Mock get waypoints
+        mockAdapter.onGet(`${url}/waypoints`).reply(200, [
+            {
+                name: "waypoint1",
+                position: [1.56, 5.6, 7.6]
+            },
+            {
+                name: "waypoint2",
+                position: [5.70, 4.84, 6.7]
+            }
+        ]);
+
+        // Mock get capabilities
+        mockAdapter.onGet(`${url}/capabilities`).reply(200, [
+            "image"
+        ]);
     }
 }
 

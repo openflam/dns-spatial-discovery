@@ -193,7 +193,7 @@ class MapsDiscovery {
         dataBlob: Blob, localizationType: string,
         vioPose: Pose | null = null
     ): Promise<MapServer | null> {
-
+        console.log('Relocalizing within discovered servers');
         // Filter out servers that do not support the localization type
         let mapServersFiltered: { [name: string]: MapServer } = {};
         for (let name in this.mapServers) {
@@ -256,10 +256,14 @@ class MapsDiscovery {
         vioPose: Pose | null = null,
         suffix: string = this.suffix
     ): Promise<MapServer | null> {
+        console.log('Localizing');
+        console.log('args: lat: ', lat, ' lon: ', lon, ' error_m: ', error_m, ' suffix: ', suffix);
         // If the current map server list is empty, discover map servers
         // and return the best possible server
         if (Object.keys(this.mapServers).length === 0) {
+            console.log('Discovering map servers');
             await this.discoverMapServers(lat, lon, error_m, suffix);
+            console.log('Map servers discovered');
             let bestServer = await this.relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
             this.activeServer = bestServer;

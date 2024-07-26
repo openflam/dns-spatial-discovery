@@ -1,18 +1,16 @@
 describe('MapServer', function () {
     it('Query capablities should work', async function () {
-        let mapServer = new dnsspatialdiscovery.MapServer("mock-map-server.com");
+        let mapServer = new dnsspatialdiscovery.MapServer("arena-2300.cmu.edu");
         await mapServer.queryCapabilities();
 
         let expectedCapabilities = [
-            "image",
-            "uwb-beacon",
-            "qr-code"
+            "image"
         ];
         assert.sameMembers(mapServer.capabilities, expectedCapabilities);
     });
 
     it('Query waypoints should work', async function () {
-        let mapServer = new dnsspatialdiscovery.MapServer("mock-map-server.com");
+        let mapServer = new dnsspatialdiscovery.MapServer("arena-2300.cmu.edu");
         await mapServer.queryWaypoints();
 
         let expectedWaypoints = [
@@ -29,16 +27,36 @@ describe('MapServer', function () {
     });
 
     it('Localization request should work (without VIO)', async function () {
-        let mapServer = new dnsspatialdiscovery.MapServer("mock-map-server.com");
-        let emptyBlob = new Blob();
-        let poseData = await mapServer.localize(emptyBlob, "image");
+        let mapServer = new dnsspatialdiscovery.MapServer("arena-2300.cmu.edu");
+        let imageBlob = new Blob(["01.png"]);
+        let poseData = await mapServer.localize(imageBlob, "image");
         let expectedPoseData = {
-            serverConfidence: 0.9,
-            pose: [
-                [1, 0, 0, 1.56],
-                [0, 1, 0, 5.6],
-                [0, 0, 1, 7.6],
-                [0, 0, 0, 1]
+            "serverConfidence": 9,
+            "pose": [
+                [
+                    0.9548239195551376,
+                    -0.014676762901239444,
+                    -0.2968094932378424,
+                    0.0
+                ],
+                [
+                    -0.016698179532823654,
+                    0.9945519115633762,
+                    -0.1028963848049263,
+                    0.0
+                ],
+                [
+                    0.2967026347130298,
+                    0.10320410765262529,
+                    0.949376879178112,
+                    0.0
+                ],
+                [
+                    0.4336249785679676,
+                    1.3008705581357356,
+                    -0.4500139934263063,
+                    1.0
+                ]
             ]
         };
 
@@ -50,25 +68,40 @@ describe('MapServer', function () {
     });
 
     it('Localization request should work (with VIO)', async function () {
-        let mapServer = new dnsspatialdiscovery.MapServer("mock-map-server.com");
-        let emptyBlob = new Blob();
+        let mapServer = new dnsspatialdiscovery.MapServer("arena-2300.cmu.edu");
+        let image1Blob = new Blob(["01.png"]);
 
-        let vioData = [
-            [1, 0, 0, 2.34],
-            [0, 1, 0, 6.60],
-            [0, 0, 1, 5.78],
-            [0, 0, 0, 1.00]
-        ];
-        let poseData = await mapServer.localize(emptyBlob, "image", vioData);
+        let vioData = CLIENT_DATA[0].vioPose;
+        let poseData = await mapServer.localize(image1Blob, "image", vioData);
 
         // First call
         let expectedPoseData = {
-            serverConfidence: 0.9,
+            serverConfidence: 9,
             pose: [
-                [1, 0, 0, 1.56],
-                [0, 1, 0, 5.60],
-                [0, 0, 1, 7.60],
-                [0, 0, 0, 1.00]
+                [
+                    0.9548239195551376,
+                    -0.014676762901239444,
+                    -0.2968094932378424,
+                    0.0
+                ],
+                [
+                    -0.016698179532823654,
+                    0.9945519115633762,
+                    -0.1028963848049263,
+                    0.0
+                ],
+                [
+                    0.2967026347130298,
+                    0.10320410765262529,
+                    0.949376879178112,
+                    0.0
+                ],
+                [
+                    0.4336249785679676,
+                    1.3008705581357356,
+                    -0.4500139934263063,
+                    1.0
+                ]
             ],
             vioPose: vioData,
             errorWithVIO: Infinity // Infinity since no past history is available
@@ -77,13 +110,13 @@ describe('MapServer', function () {
         assert.deepEqual(poseData, expectedPoseData);
 
         // Second call
-        poseData = await mapServer.localize(emptyBlob, "image", vioData);
+        poseData = await mapServer.localize(image1Blob, "image", vioData);
         expectedPoseData.errorWithVIO = 0.0;
         assert.deepEqual(poseData, expectedPoseData);
     });
 
     it('Localization request should raise error if capability is not supported', async function () {
-        let mapServer = new dnsspatialdiscovery.MapServer("mock-map-server.com");
+        let mapServer = new dnsspatialdiscovery.MapServer("arena-2300.cmu.edu");
         let emptyBlob = new Blob();
 
         let isErrorThrown = false;
