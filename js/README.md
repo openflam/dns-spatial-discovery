@@ -1,8 +1,6 @@
 # Javascript DNS spatial discovery
 
-## Usage
-
-### Installation
+## Installation
 The npm package is hosted within the `openvps` scope on Github npm registry.
 
 ```sh
@@ -11,7 +9,9 @@ npm login --scope=@openvps --registry=https://npm.pkg.github.com
 npm install @openvps/dnsspatialdiscovery@1.0.2
 ```
 
-#### Discovery
+## Usage
+
+### Discovery
 And then the library can be use in javascript as:
 ```javascript
 const suffix = "loc." // Suffix to the discovered geodomains
@@ -32,14 +32,31 @@ The `localize` function:
 - If best localization result provided all the discovered is high, rediscovered servers and relocalizes.
 - If no servers are discovered, returns null.
 
-#### No discovery
+### No discovery
 
-You might want to skip disocvery phase if you already know which server to use. In that case:
+You might want to skip disocvery phase if you already know which map server to use. In that case:
 
 ```js
 let mapServer = new dnsspatialdiscovery.MapServer("map-server.com");
 let emptyBlob = new Blob([image]);
 let poseData = await mapServer.localize(emptyBlob, "image");
+```
+
+### Events
+
+Following events are raised by `dnsspatialdiscovery.Events` object:
+- "mapfound:good": A map with an error lower than the cofigured bound is found.
+- "mapfound:poor": A map is found, but even the best of the discovered maps in the area has a high error.
+- "nomap": No map found.
+
+Functions can be attached to events as:
+```javascript
+dnsspatialdiscovery.Events.on('mapfound:good', () => {
+    // Make location marker green
+});
+dnsspatialdiscovery.Events.on('mapfound:poor', () => {
+    // Make location marker yellow
+});
 ```
 
 ## Development

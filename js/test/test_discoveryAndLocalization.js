@@ -62,4 +62,30 @@ describe('Map Discovery and Localization', function () {
         assert.deepEqual(errorWithVIOSequence, expectedErrorWithVIOSequence);
         assert.deepEqual(serverConfidenceSequence, expectedServerConfidenceSequence);
     });
+
+    it('Sequence of map events raised', async function () {
+        const discoveryObj = new dnsspatialdiscovery.MapsDiscovery(
+            "loc.", "https://loc-nameserver.net");
+
+        // Attach event listeners
+        let eventsSequence = [];
+        dnsspatialdiscovery.Events.on('mapfound:good', () => eventsSequence.push('good'));
+        dnsspatialdiscovery.Events.on('mapfound:poor', () => eventsSequence.push('poor'));
+        dnsspatialdiscovery.Events.on('nomap', () => eventsSequence.push('nomap'));
+
+        for (clientData of CLIENT_DATA) {
+            await discoveryObj.localize(
+                clientData.lat, clientData.lon, clientData.error_m,
+                new Blob([clientData.imageName]), "image", clientData.vioPose
+            );
+        }
+
+        const expectedEventsSequence = [
+            "poor", "good", "good", "poor", "good", "good",
+            "good", "good", "good", "poor", "poor", "poor",
+            "good", "good", "good", "good", "good",
+        ];
+
+        assert.deepEqual(eventsSequence, expectedEventsSequence);
+    });
 });

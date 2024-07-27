@@ -4,6 +4,7 @@ import { MapServer, LocalizationData, Pose } from '../localization/map-server';
 import { DNSRecord } from './dns';
 import { CONFIG } from '../config';
 import { consoleLog } from '../utils/log';
+import Events from '../utils/events';
 
 
 // Nameserver and the DNS object to use for querying DNS records from this name server
@@ -49,6 +50,12 @@ class NameserverQueue {
         return this.queue.length === 0;
     }
 }
+
+enum MapEvents {
+    goodMapFound = 'mapfound:good',
+    poorMapFound = 'mapfound:poor',
+    noMapFound = 'nomap',
+};
 
 class MapsDiscovery {
     // Root name server
@@ -285,6 +292,25 @@ class MapsDiscovery {
         return true;
     }
 
+    // Called just before returning from the localize function.
+    // 
+    #raiseEventAndReturn(mapServer: MapServer, event: MapEvents | null = null) {
+        if (event === null) {
+            if (mapServer === null) {
+                event = MapEvents.noMapFound;
+            }
+            else if (this.isServerAcceptable(mapServer)) {
+                event = MapEvents.goodMapFound;
+            }
+            else {
+                event = MapEvents.poorMapFound;
+            }
+        }
+        Events.emit(event);
+
+        return mapServer;
+    }
+
     /*
     * Disocver and localize against the map servers.
     *
@@ -302,25 +328,16 @@ class MapsDiscovery {
 
         // If the current map server list is empty, discover map servers
         // and return the best possible server
-        if (Object.keys(this.mapServers).length === 0) {
+        if ((Object.keys(this.mapServers).length === 0)
+            || (this.activeServer === null)) {
             consoleLog('Discovering map servers as the current list is empty', 'debug');
 
             await this.discoverMapServers(lat, lon, error_m, suffix);
             let bestServer = await this.#relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
             this.activeServer = bestServer;
-            return this.activeServer;
-        }
 
-        // If map servers are discovered, but active server is null,
-        // Relocalize against the discovered servers and return the best possible server.
-        // This can only happen when discoverMapServers function is called before this.
-        if (this.activeServer === null) {
-            consoleLog('Servers are discovered, but active server is null', 'debug');
-            let bestServer = await this.#relocalizeWithinDiscoveredServers(
-                dataBlob, localizationType, vioPose);
-            this.activeServer = bestServer;
-            return this.activeServer;
+            return this.#raiseEventAndReturn(this.activeServer);
         }
 
         // If active server is not null, localize against the active server first.
@@ -328,7 +345,7 @@ class MapsDiscovery {
         await this.activeServer.localize(dataBlob, localizationType, vioPose, this.currentLocalizationID);
         if (this.isServerAcceptable(this.activeServer)) {
             consoleLog('Active server is acceptable', 'debug');
-            return this.activeServer;
+            return this.#raiseEventAndReturn(this.activeServer, MapEvents.goodMapFound);
         }
 
         // If the localization error is too high, relocalize against the discovered servers.
@@ -337,7 +354,7 @@ class MapsDiscovery {
             dataBlob, localizationType, vioPose);
         if (this.isServerAcceptable(bestServer)) {
             this.activeServer = bestServer;
-            return this.activeServer;
+            return this.#raiseEventAndReturn(this.activeServer, MapEvents.goodMapFound);
         }
 
         // If the localization error is still too high, re-initialize the discovery process.
@@ -348,7 +365,7 @@ class MapsDiscovery {
         bestServer = await this.#relocalizeWithinDiscoveredServers(
             dataBlob, localizationType, vioPose);
         this.activeServer = bestServer;
-        return this.activeServer;
+        return this.#raiseEventAndReturn(this.activeServer);
     }
 }
 
