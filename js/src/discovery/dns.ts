@@ -1,4 +1,4 @@
-import axios from "../axiosInstance";
+import axios from "../utils/axiosInstance";
 import { CONFIG } from "../config";
 
 // DNS record object stored in the cache and returned by the DNS lookup function.

@@ -1,4 +1,4 @@
-import axios from "../axiosInstance";
+import axios from "../utils/axiosInstance";
 import { queryLocalize, errorWithVIO } from "./localize";
 
 // Pose is a 2D array of numbers. It represents the position and orientation.
