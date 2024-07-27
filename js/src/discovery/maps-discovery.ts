@@ -3,6 +3,7 @@ import { LocationToGeoDomain } from './location-to-geo-domain';
 import { MapServer, LocalizationData, Pose } from '../localization/map-server';
 import { DNSRecord } from './dns';
 import { CONFIG } from '../config';
+import { consoleLog } from '../utils/log';
 
 
 // Nameserver and the DNS object to use for querying DNS records from this name server
@@ -78,7 +79,12 @@ class MapsDiscovery {
     //  relocation/map discovery is triggered.
     // NOTE: Preference is always given to errorThreshold_m to make the decision.
     //  serverConfidenceThreshold is used only if errorThreshold_m is not set (eg. VIO pose not passed in).
-    serverConfidenceThreshold: number = 0.8;
+    serverConfidenceThreshold: number = 300;
+
+    // Localization round. This is used to keep track of the number of localizations.
+    // This is used to make sure that the localization is not done multiple times for a single data blob.
+    // It is incremented whenever the localize function is called.
+    currentLocalizationID: number = 0;
 
     constructor(suffix: string, rootNameserver: string = CONFIG.DoH_URL) {
         this.suffix = suffix;
@@ -146,6 +152,9 @@ class MapsDiscovery {
         // Update map servers list if the record is of type MCNAME
         if (recordDataJSON.type === 'MCNAME') {
             let name = recordDataJSON.data;
+            if (name in this.mapServers) {
+                return; // Already discovered. Do not add again.
+            }
             if (this.nameFilter(name)) {
                 try {
                     let mapServer = new MapServer(name);
@@ -153,7 +162,7 @@ class MapsDiscovery {
                     this.mapServers[name] = mapServer;
                 } catch (error) {
                     // If there is an error, the map server is not added to the list
-                    console.log(error);
+                    consoleLog(error, 'error');
                 }
             }
         }
@@ -177,8 +186,19 @@ class MapsDiscovery {
         if (localization2 === null) {
             return true;
         }
-        if ('errorWithVIO' in localization1 && 'errorWithVIO' in localization2) {
-            return localization1.errorWithVIO < localization2.errorWithVIO;
+        if ('errorWithVIO' in localization1 || 'errorWithVIO' in localization2) {
+            // Compare the errors only if neither is Infinity
+            if (localization1.errorWithVIO !== Infinity && localization2.errorWithVIO !== Infinity) {
+                return localization1.errorWithVIO < localization2.errorWithVIO;
+            }
+
+            // Check if either is Infinity. If so, the other is better.
+            if (localization1.errorWithVIO === Infinity && localization2.errorWithVIO !== Infinity) {
+                return false;
+            }
+            else if (localization2.errorWithVIO === Infinity && localization1.errorWithVIO !== Infinity) {
+                return true;
+            }
         }
         if ('serverConfidence' in localization1 && 'serverConfidence' in localization2) {
             return localization1.serverConfidence > localization2.serverConfidence;
@@ -189,12 +209,13 @@ class MapsDiscovery {
     }
 
     // Relocalize against the discovered servers and get the best localization result
-    async relocalizeWithinDiscoveredServers(
+    async #relocalizeWithinDiscoveredServers(
         dataBlob: Blob, localizationType: string,
         vioPose: Pose | null = null
     ): Promise<MapServer | null> {
-        console.log('Relocalizing within discovered servers');
+        consoleLog('Relocalizing within the discovered servers', 'debug');
         // Filter out servers that do not support the localization type
+        // and any excluded server
         let mapServersFiltered: { [name: string]: MapServer } = {};
         for (let name in this.mapServers) {
             let server = this.mapServers[name];
@@ -202,12 +223,33 @@ class MapsDiscovery {
                 mapServersFiltered[name] = server;
             }
         }
+        consoleLog(`Filtered servers: ${Object.keys(mapServersFiltered).join(', ')}`, 'debug');
 
         // Run all localizations in parallel
         let nameToLocalizationPromises: { [name: string]: Promise<LocalizationData> } = {};
         for (let name in mapServersFiltered) {
             let server = mapServersFiltered[name];
-            nameToLocalizationPromises[name] = server.localize(dataBlob, localizationType, vioPose);
+
+            let latestLocalizationData = server.getLatestLocalizationData();
+
+            let isCallLocalize = false;
+            // Localize if the server has no localization data.
+            if (latestLocalizationData === null || latestLocalizationData.localizationID === null) {
+                isCallLocalize = true;
+            }
+
+            // Localize if the server has localization data that is older than the current localization ID.
+            else if (latestLocalizationData.localizationID < this.currentLocalizationID) {
+                isCallLocalize = true;
+            }
+            if (isCallLocalize) {
+                consoleLog(`Localizing against ${name}`, 'debug');
+                nameToLocalizationPromises[name] = server.localize(dataBlob, localizationType, vioPose, this.currentLocalizationID);
+            }
+            else {
+                consoleLog(`Not localizing against ${name} as the localization data is up-to-date`, 'debug');
+                nameToLocalizationPromises[name] = Promise.resolve(latestLocalizationData);
+            }
         }
 
         // Get the localization results
@@ -256,15 +298,15 @@ class MapsDiscovery {
         vioPose: Pose | null = null,
         suffix: string = this.suffix
     ): Promise<MapServer | null> {
-        console.log('Localizing');
-        console.log('args: lat: ', lat, ' lon: ', lon, ' error_m: ', error_m, ' suffix: ', suffix);
+        this.currentLocalizationID += 1;
+
         // If the current map server list is empty, discover map servers
         // and return the best possible server
         if (Object.keys(this.mapServers).length === 0) {
-            console.log('Discovering map servers');
+            consoleLog('Discovering map servers as the current list is empty', 'debug');
+
             await this.discoverMapServers(lat, lon, error_m, suffix);
-            console.log('Map servers discovered');
-            let bestServer = await this.relocalizeWithinDiscoveredServers(
+            let bestServer = await this.#relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
             this.activeServer = bestServer;
             return this.activeServer;
@@ -272,22 +314,26 @@ class MapsDiscovery {
 
         // If map servers are discovered, but active server is null,
         // Relocalize against the discovered servers and return the best possible server.
-        // Active server should only be null the first time this function is called.
+        // This can only happen when discoverMapServers function is called before this.
         if (this.activeServer === null) {
-            let bestServer = await this.relocalizeWithinDiscoveredServers(
+            consoleLog('Servers are discovered, but active server is null', 'debug');
+            let bestServer = await this.#relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
             this.activeServer = bestServer;
             return this.activeServer;
         }
 
         // If active server is not null, localize against the active server first.
-        // If the localization error is too high, relocalize.
-        // If the localization error is still too high, re-initialize the discovery process.
-        await this.activeServer.localize(dataBlob, localizationType, vioPose);
+        consoleLog('Localizing against the active server', 'debug');
+        await this.activeServer.localize(dataBlob, localizationType, vioPose, this.currentLocalizationID);
         if (this.isServerAcceptable(this.activeServer)) {
+            consoleLog('Active server is acceptable', 'debug');
             return this.activeServer;
         }
-        let bestServer = await this.relocalizeWithinDiscoveredServers(
+
+        // If the localization error is too high, relocalize against the discovered servers.
+        consoleLog('Active server is not acceptable. So relocalizing against the discovered servers', 'debug');
+        let bestServer = await this.#relocalizeWithinDiscoveredServers(
             dataBlob, localizationType, vioPose);
         if (this.isServerAcceptable(bestServer)) {
             this.activeServer = bestServer;
@@ -295,9 +341,11 @@ class MapsDiscovery {
         }
 
         // If the localization error is still too high, re-initialize the discovery process.
-        // This time, just retur the best possible server.
+        // This time, just return the best possible server.
+        consoleLog('Localization error is still too high. Re-initializing the discovery process', 'debug');
         await this.discoverMapServers(lat, lon, error_m, suffix);
-        bestServer = await this.relocalizeWithinDiscoveredServers(
+        consoleLog('Relocalizing against the discovered servers', 'debug');
+        bestServer = await this.#relocalizeWithinDiscoveredServers(
             dataBlob, localizationType, vioPose);
         this.activeServer = bestServer;
         return this.activeServer;

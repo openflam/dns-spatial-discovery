@@ -20,7 +20,8 @@ interface LocalizationData {
     pose: Pose;
     vioPose?: Pose; // VIO pose at the time of query.
     serverConfidence?: number; // Confidence in the pose returned by the server.
-    errorWithVIO?: number; // Error between the pose and VIO pose.
+    errorWithVIO?: number; // Error between the pose and VIO pose
+    localizationID?: number; // The caller of localize() can set this. It is used to avoid duplicate localization.
 };
 
 /**
@@ -71,7 +72,8 @@ class MapServer {
     }
 
     async localize(dataBlob: Blob, localizationType: string,
-        currentVIOPose: Pose | null = null): Promise<LocalizationData> {
+        currentVIOPose: Pose | null = null,
+        localizationID: number | null = null): Promise<LocalizationData> {
 
         if (this.capabilities.length === 0) {
             await this.queryCapabilities();
@@ -97,6 +99,10 @@ class MapServer {
             localizationData.vioPose = currentVIOPose;
             let error = errorWithVIO(this, localizationData);
             localizationData.errorWithVIO = error;
+        }
+
+        if (localizationID !== null) {
+            localizationData.localizationID = localizationID;
         }
 
         this.localizationDataList.push(localizationData);

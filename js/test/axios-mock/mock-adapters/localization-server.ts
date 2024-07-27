@@ -4,8 +4,6 @@ import { CUBICLES_MAP_REPONSE } from "./localization-data/cubicles";
 import { PASSAGEWAY_MAP_REPONSE } from "./localization-data/passageway";
 import { LOBBY_MAP_REPONSE } from "./localization-data/lobby";
 
-const mockServerURL = 'https://mock-map-server.com';
-
 const urlToMapResponse: { [url: string]: { [imageName: string]: LocalizationResponse } } = {
     "https://arena-2300.cmu.edu": ARENA_MAP_RESPONSE,
     "https://cubicles-maps.com": CUBICLES_MAP_REPONSE,
