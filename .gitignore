@@ -2,3 +2,6 @@ __pycache__
 .idea
 .pytest_cache/
 node_modules
+
+# dist is force pushed for releases
+dist/
