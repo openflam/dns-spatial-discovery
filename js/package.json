@@ -8,21 +8,28 @@
   "description": "Using the DNS to disocvery localization servers based on location",
   "main": "dist/bundle.js",
   "scripts": {
-    "build": "webpack --mode production",
+    "build:dev": "webpack --config webpack.dev.js",
+    "build:prod": "webpack --config webpack.prod.js",
+    "build:test": "webpack --config webpack.test.js",
     "serve": "http-server . --port 9000 -o /test/test.html",
-    "test": "npm run build && npm run serve"
+    "test": "npm run build:dev && npm run build:test && npm run serve",
+    "test:prod": "npm run build:prod && npm run build:test && npm run serve"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.22.0",
     "chai": "^4.4.1",
+    "dns-zonefile": "^0.3.2",
     "http-server": "^14.1.1",
     "mocha": "^10.6.0",
     "opn-cli": "^5.0.0",
     "ts-loader": "^9.5.1",
     "typescript": "^5.5.3",
     "webpack": "^5.92.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^5.1.4",
+    "webpack-merge": "^6.0.1"
   },
   "dependencies": {
+    "axios": "^1.7.2",
     "s2-geometry": "^1.2.10"
   },
   "publishConfig": {

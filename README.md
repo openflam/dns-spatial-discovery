@@ -11,6 +11,8 @@ Uses the DNS to discover localization servers near a GPS location. This reposito
 | DNS query depth        | :x:                | :x:                |
 | TXT record unwrapping  | :white_check_mark: | :x:                |
 | Name-based fitering    | :white_check_mark: | :x:                |
+| NS record chasing      | :white_check_mark: | :x:                |
 | Name-based priority    | :x:                | :x:                |
-| Map server negotiation | :x:                | :x:                |
-| Localization           | :x:                | :x:                |
+| Map server negotiation | :white_check_mark: | :x:                |
+| Localization           | :white_check_mark: | :x:                |
+| Parallel DNS lookups   | :white_check_mark: | :x:                |
