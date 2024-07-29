@@ -130,7 +130,7 @@ class MapsDiscovery {
         suffix: string,
         nameserver: Nameserver
     ): Promise<{ [name: string]: MapServer }> {
-        const geoDomains = LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
+        const geoDomains = await LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
         let dnsLookupPromises: { [name: string]: Promise<DNSRecord[]> } = {};
         // Run all DNS lookups in parallel
         for (const domain of geoDomains) {
