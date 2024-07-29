@@ -42,7 +42,13 @@ func S2CellsInCircle(center LatLng, radius float64, minLevel, maxLevel, maxCells
 		MaxCells: maxCells,
 	}
 	// Get the covering cells
-	covering := rc.Covering(cap)
+	covering := rc.InteriorCovering(cap)
+
+	if len(covering) == 0 {
+		// Sometimes for small radius, the internal covering is empty.
+		// because of the maxLevel. In this case we use the external covering.
+		covering = rc.Covering(cap)
+	}
 
 	return covering, nil
 }
