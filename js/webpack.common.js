@@ -11,7 +11,12 @@ module.exports = {
       },
       {
         test: /\.wasm$/,
-        type: "asset/resource"
+        type: "asset/inline",
+        generator: {
+          dataUrl: (content) => {
+            return `${content.toString('base64')}`
+          },
+        },
       }
     ],
   },
