@@ -27,3 +27,15 @@ func JSS2CellsInCircle(this js.Value, p []js.Value) interface{} {
 
 	return coveringJsArray
 }
+
+// JSS2BinaryIDToToken is a wrapper around S2BinaryIDToToken to be called from JavaScript.
+func JSS2BinaryIDToToken(this js.Value, p []js.Value) interface{} {
+	binaryID := p[0].String()
+	return S2BinaryIDToToken(binaryID)
+}
+
+// JSS2TokenToBinaryID is a wrapper around S2TokenToBinaryID to be called from JavaScript.
+func JSS2TokenToBinaryID(this js.Value, p []js.Value) interface{} {
+	token := p[0].String()
+	return S2TokenToBinaryID(token)
+}

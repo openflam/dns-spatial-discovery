@@ -28,5 +28,24 @@ describe('s2CircleCoverer', function () {
             ]
         );
     });
+
+    it('s2-utils should do the correct conversion from token to domain digits', async function () {
+        var domainDigits = await dnsspatialdiscovery.exportedForTesting.tokenToDomainDigits('8834f22144');
+        assert.deepEqual(
+            domainDigits,
+            [
+                '0', '2', '2', '0', '0', '1', '0',
+                '1', '2', '3', '1', '2', '2', '1',
+                '0', '0', '1', '4'
+            ]);
+        domainDigits = await dnsspatialdiscovery.exportedForTesting.tokenToDomainDigits('8834f221521');
+        assert.deepEqual(
+            domainDigits,
+            [
+                '0', '0', '1', '2', '2', '2', '0',
+                '0', '1', '0', '1', '2', '3', '1',
+                '2', '2', '1', '0', '0', '1', '4'
+            ]);
+    });
 });
 

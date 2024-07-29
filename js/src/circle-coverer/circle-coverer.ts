@@ -1,4 +1,4 @@
-import { loadCircleCovererWasm } from "./load-wasm";
+import { loadCircleCovererWasm } from "../utils/wasm/load-wasm";
 import { consoleLog } from "../utils/log";
 
 async function s2CircleCoverer(lat: number, lng: number, radius: number) {
