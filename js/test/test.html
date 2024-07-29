@@ -28,13 +28,16 @@
   <!-- Attach mocker to axios instance -->
   <script src="./axios-mock/dist/bundle.js"></script>
 
+  <!-- Include Client data -->
+  <script src="./mock-localization-data/mock_client_data.js"></script>
+
   <!-- Include test files -->
-  <script src="../test/test_dns.js"></script>
-  <script src="../test/test_locToGeoDomain.js"></script>
-  <script src="../test/test_mapServer.js"></script>
-  <script src="../test/test_locToServers.js"></script>
-  <script src="../test/mock-localization-data/mock_client_data.js"></script>
-  <script src="../test/test_discoveryAndLocalization.js"></script>
+  <script src="./test_dns.js"></script>
+  <script src="./test_s2CircleCoverer.js"></script>
+  <script src="./test_locToGeoDomain.js"></script>
+  <script src="./test_mapServer.js"></script>
+  <script src="./test_locToServers.js"></script>
+  <script src="./test_discoveryAndLocalization.js"></script>
 
   <!-- Run tests -->
   <script>
