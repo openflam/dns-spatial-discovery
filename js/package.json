@@ -4,9 +4,10 @@
     "type": "git",
     "url": "git+https://github.com/openvps/dns-spatial-discovery.git.git"
   },
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Using the DNS to disocvery localization servers based on location",
   "main": "dist/bundle.js",
+  "types": "dist/src/index.d.ts",
   "scripts": {
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
