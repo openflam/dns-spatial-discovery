@@ -30,8 +30,7 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
-    "axios": "^1.7.2",
-    "s2-geometry": "^1.2.10"
+    "axios": "^1.7.2"
   },
   "publishConfig": {
     "registry": "https://npm.pkg.github.com"
