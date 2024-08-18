@@ -2,6 +2,7 @@ type Pose = number[][];
 interface WayPoint {
     name: string;
     position: number[];
+    neighbors: string[];
 }
 interface LocalizationResponse {
     pose: Pose;
