@@ -1,4 +1,4 @@
-package s2_circle_coverer
+package s2_utils
 
 import (
 	"strconv"
