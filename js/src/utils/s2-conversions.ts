@@ -22,6 +22,9 @@ function binaryIDToDomainDigits(binaryID: string): string[] {
     // s = [face] [child]^k 1 0^(60-2k)
     // [face] - 3 bits. [child] - 2 bits each.
 
+    // Pad with 0s to make it 64 bits
+    binaryID = binaryID.padStart(64, '0');
+
     // Remove trailing 0s and 1
     binaryID = binaryID.slice(0, binaryID.lastIndexOf('1'));
 
@@ -31,6 +34,8 @@ function binaryIDToDomainDigits(binaryID: string): string[] {
 
     // The hierarchy is the rest of the bits
     let hierarchy = parseInt(binaryID.slice(3), 2).toString(4);
+    let expectedLength = (binaryID.length - 3) / 2; // 3 face bits. 2 bits per level.
+    hierarchy = hierarchy.padStart(expectedLength, '0');
     let hierarchySplit = hierarchy.split('');
 
     domainDigits = domainDigits.concat(hierarchySplit);
