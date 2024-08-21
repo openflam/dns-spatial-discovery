@@ -20,21 +20,21 @@ $TTL 120
 @	IN	NS	loc-nameserver.net.
 
 ; TXT Records
-3.1.3.3.0	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-0.0.0.0.1.3.3.3.0	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-1.0.0.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.3.3.0	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-3.0.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-0.0.1.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.1.3.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-1.2.3.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-0.3.3.3.0	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.0.0.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.1.0.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-3.1.0.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-1.0.1.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.2.2.2.2.3.1.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-1.1.1.0.3.0	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.1.3.3.0	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
-2.0.0.1	IN	TXT	{"type":"MNS","data":"cmu-nameserver.cmu.edu."}
+3.1.3.3.0	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+0.0.0.0.1.3.3.3.0	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+1.0.0.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.3.3.0	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+3.0.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+0.0.1.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.1.3.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+1.2.3.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+0.3.3.3.0	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.0.0.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.1.0.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+3.1.0.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+1.0.1.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.2.2.2.2.3.1.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+1.1.1.0.3.0	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.1.3.3.0	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
+2.0.0.1	IN	TXT	type@MNS#data@cmu-nameserver.cmu.edu.
 `

@@ -151,10 +151,15 @@ class MapsDiscovery {
         }
         // Parse the data field as JSON
         let recordData = record.data;
-        const jsonString = recordData
-            .replace(/([a-zA-Z0-9_]+):/g, '"$1":') // Add double quotes around keys
-            .replace(/:([a-zA-Z0-9_.]+)/g, ':"$1"') // Add double quotes around values
-        const recordDataJSON = JSON.parse(jsonString);
+
+        // Convert the format in the TXT record to json format.
+        // The format in the DNS record is: "key1@value1#key2@value2#..."
+        let jsonString = recordData
+            .replace(/([a-zA-Z]+)@([a-zA-Z0-9\\/:$,._-]+)/g, '"$1":"$2"')
+            .replace(/#/g, ',');
+        jsonString = `{${jsonString}}`;
+
+        let recordDataJSON = JSON.parse(jsonString);
 
         // Update map servers list if the record is of type MCNAME
         if (recordDataJSON.type === 'MCNAME') {
