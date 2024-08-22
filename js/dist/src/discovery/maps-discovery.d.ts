@@ -28,6 +28,8 @@ declare class MapsDiscovery {
     serverConfidenceThreshold: number;
     currentLocalizationID: number;
     constructor(suffix: string, rootNameserver?: string);
+    setServerConfidenceThreshold(serverConfidenceThreshold: number): void;
+    setErrorThreshold(errorThreshold_m: number): void;
     /**
      *
      * @param lat Latitude
