@@ -96,9 +96,14 @@ class MapsDiscovery {
     constructor(suffix: string, rootNameserver: string = CONFIG.DoH_URL) {
         this.suffix = suffix;
         this.rootNameserver = rootNameserver;
-        // Add the root name server to the queue
-        let rootNameserverObj = new Nameserver(this.rootNameserver);
-        this.nameserverQueue.add(rootNameserverObj);
+    }
+
+    setServerConfidenceThreshold(serverConfidenceThreshold: number): void {
+        this.serverConfidenceThreshold = serverConfidenceThreshold;
+    }
+
+    setErrorThreshold(errorThreshold_m: number): void {
+        this.errorThreshold_m = errorThreshold_m;
     }
 
     /**
@@ -114,6 +119,12 @@ class MapsDiscovery {
         error_m: number,
         suffix: string = this.suffix
     ): Promise<{ [name: string]: MapServer }> {
+        // Add the root name server to the queue if it is empty
+        if (this.nameserverQueue.isEmpty()) {
+            let rootNameserverObj = new Nameserver(this.rootNameserver);
+            this.nameserverQueue.add(rootNameserverObj);
+        }
+
         while (!this.nameserverQueue.isEmpty()) {
             let nameserver = this.nameserverQueue.get();
             if (nameserver === null) {
