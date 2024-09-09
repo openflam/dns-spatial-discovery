@@ -26,4 +26,5 @@ export namespace output {
         let name: string;
         let type: string;
     }
+    let globalObject: string;
 }

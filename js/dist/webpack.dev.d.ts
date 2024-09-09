@@ -27,6 +27,7 @@ declare const _exports: {
             name: string;
             type: string;
         };
+        globalObject: string;
     };
 };
 export = _exports;

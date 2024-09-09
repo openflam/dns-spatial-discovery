@@ -29,6 +29,7 @@ module.exports = {
     library: {
       name: 'dnsspatialdiscovery',
       type: 'umd'
-    }
+    },
+    globalObject: 'this'
   }
 };
