@@ -1,5 +1,7 @@
 describe('DNSQueryTimes', function () {
     it('Get query times (Copy code to console to get query times data)', async function () {
+        return;
+
         let geoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(
             CLIENT_DATA[0].lat,
             CLIENT_DATA[0].lon,
@@ -7,25 +9,32 @@ describe('DNSQueryTimes', function () {
             "loc."
         );
 
-        let queryTimes = [];
+        let queryTimes = {};
 
-        // Iterate i from 1 to 50. Launch queries in parallel for the first i geo-domains
-        // and record the time taken to complete all queries.
-        for (let i = 1; i <= 50; i++) {
-            let dnsObj = new dnsspatialdiscovery.DNS();
-            let start = Date.now();
-            let promises = [];
-            for (let j = 0; j < i; j++) {
-                promises.push(dnsObj.dnsLookup(geoDomains[j], "TXT"));
+        // Run the benchmark 100 times to get multiple data points.
+        for (i = 0; i < 100; i++) {
+            // Iterate i from 1 to the length of geodomains. Launch queries in parallel for the first i geo-domains
+            // and record the time taken to complete all queries.
+            if (i % 10 === 0) {
+                console.log("Iteration: " + (i + 1));
             }
-            await Promise.all(promises);
-            let end = Date.now();
-            queryTimes.push({
-                "numQueries": i,
-                "time_ms": end - start
-            });
+            for (let i = 1; i <= geoDomains.length; i++) {
+                let dnsObj = new dnsspatialdiscovery.DNS();
+                let start = Date.now();
+                let promises = [];
+                for (let j = 0; j < i; j++) {
+                    promises.push(dnsObj.dnsLookup(geoDomains[j], "TXT"));
+                }
+                await Promise.all(promises);
+                let end = Date.now();
+
+                if (!queryTimes[i]) {
+                    queryTimes[i] = [];
+                }
+                queryTimes[i].push(end - start);
+            }
         }
 
-        assert.strictEqual(queryTimes.length, 50);
+        assert.strictEqual(queryTimes.length, geoDomains.length);
     });
 });
