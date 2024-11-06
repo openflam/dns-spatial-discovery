@@ -1,4 +1,4 @@
-module github.com/openvps/dns-spatial-discovery/js/s2-circle-coverer-go
+module github.com/openflam/dns-spatial-discovery/js/s2-circle-coverer-go
 
 go 1.22.5
 

@@ -3,8 +3,8 @@ package js_wrapper
 import (
 	"syscall/js"
 
-	"github.com/openvps/dns-spatial-discovery/js/s2-circle-coverer-go/s2_circle_coverer"
-	"github.com/openvps/dns-spatial-discovery/js/s2-circle-coverer-go/s2_utils"
+	"github.com/openflam/dns-spatial-discovery/js/s2-circle-coverer-go/s2_circle_coverer"
+	"github.com/openflam/dns-spatial-discovery/js/s2-circle-coverer-go/s2_utils"
 )
 
 // JSS2CellsInCircle is a wrapper around S2CellIDStrings to be called from JavaScript.

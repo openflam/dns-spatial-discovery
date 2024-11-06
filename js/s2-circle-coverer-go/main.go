@@ -3,7 +3,7 @@ package main
 import (
 	"syscall/js"
 
-	"github.com/openvps/dns-spatial-discovery/js/s2-circle-coverer-go/js_wrapper"
+	"github.com/openflam/dns-spatial-discovery/js/s2-circle-coverer-go/js_wrapper"
 )
 
 func main() {
