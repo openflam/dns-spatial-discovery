@@ -1,12 +1,12 @@
 # Javascript DNS spatial discovery
 
 ## Installation
-The npm package is hosted within the `openvps` scope on Github npm registry.
+The npm package is hosted within the `openflam` scope on Github npm registry.
 
 ```sh
-npm login --scope=@openvps --registry=https://npm.pkg.github.com
+npm login --scope=@openflam --registry=https://npm.pkg.github.com
 <Login with your PERSONAL username and password>
-npm install @openvps/dnsspatialdiscovery@1.0.2
+npm install @openflam/dnsspatialdiscovery@1.0.2
 ```
 
 ## Usage
