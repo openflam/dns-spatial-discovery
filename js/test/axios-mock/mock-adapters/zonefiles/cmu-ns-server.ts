@@ -20,39 +20,48 @@ $TTL 120
 @	IN	NS	cmu-nameserver.cmu.edu.
 
 ; TXT Records
-0.3.0	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-1.3.0	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-1.0.1	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-2.0.1	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-3.1	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-0.2	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-1.3	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
-2.0	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.0.3.0	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.1.3.0	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.1.0.1	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.2.0.1	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.3.1	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.0.2	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.1.3	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
+U.2.0	IN	TXT	type@MCNAME#data@arena-2300.cmu.edu
 
-0.3.0	IN	TXT	type@MCNAME#data@cubicles-maps.com
-1.3.0	IN	TXT	type@MCNAME#data@cubicles-maps.com
-1.0.1	IN	TXT	type@MCNAME#data@cubicles-maps.com
-2.0.1	IN	TXT	type@MCNAME#data@cubicles-maps.com
-3.1	IN	TXT	type@MCNAME#data@cubicles-maps.com
-0.2	IN	TXT	type@MCNAME#data@cubicles-maps.com
-1.3	IN	TXT	type@MCNAME#data@cubicles-maps.com
-2.0	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.0.3.0	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.1.3.0	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.1.0.1	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.2.0.1	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.3.1	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.0.2	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.1.3	IN	TXT	type@MCNAME#data@cubicles-maps.com
+U.2.0	IN	TXT	type@MCNAME#data@cubicles-maps.com
 
-0.3.0	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-1.3.0	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-1.0.1	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-2.0.1	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-3.1	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-0.2	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-1.3	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
-2.0	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.0.3.0	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.1.3.0	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.1.0.1	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.2.0.1	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.3.1	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.0.2	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.1.3	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
+U.2.0	IN	TXT	type@MCNAME#data@lobby-2300.cmu.edu
 
-0.3.0	IN	TXT	type@MCNAME#data@passageway-2300.com
-1.3.0	IN	TXT	type@MCNAME#data@passageway-2300.com
-1.0.1	IN	TXT	type@MCNAME#data@passageway-2300.com
-2.0.1	IN	TXT	type@MCNAME#data@passageway-2300.com
-3.1	IN	TXT	type@MCNAME#data@passageway-2300.com
-0.2	IN	TXT	type@MCNAME#data@passageway-2300.com
-1.3	IN	TXT	type@MCNAME#data@passageway-2300.com
-2.0	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.0.3.0	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.1.3.0	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.1.0.1	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.2.0.1	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.3.1	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.0.2	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.1.3	IN	TXT	type@MCNAME#data@passageway-2300.com
+U.2.0	IN	TXT	type@MCNAME#data@passageway-2300.com
+
+7.0.3.0	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.1.3.0	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.1.0.1	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.2.0.1	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.3.1	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.0.2	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.1.3	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
+7.2.0	IN	TXT	type@MCNAME#data@known-altitude-map.cmu.edu
 `

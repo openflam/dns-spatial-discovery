@@ -112,11 +112,14 @@ class MapsDiscovery {
      * @param lon Longitude
      * @param error_m Error in meters
      * @param suffix The suffix to append to the geo domains.
+     * 
      * @returns Domains to query for the given location.
      */
     async discoverMapServers(
         lat: number, lon: number,
         error_m: number,
+        altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
+        exploreUnknownAltitude: boolean = false,
         suffix: string = this.suffix
     ): Promise<{ [name: string]: MapServer }> {
         // Add the root name server to the queue if it is empty
@@ -130,7 +133,10 @@ class MapsDiscovery {
             if (nameserver === null) {
                 break;
             }
-            await this.discoverMapsInNameserver(lat, lon, error_m, suffix, nameserver);
+            await this.discoverMapsInNameserver(
+                lat, lon, error_m, suffix, nameserver,
+                altitude, exploreUnknownAltitude
+            );
         }
         return this.mapServers;
     }
@@ -139,9 +145,12 @@ class MapsDiscovery {
         lat: number, lon: number,
         error_m: number,
         suffix: string,
-        nameserver: Nameserver
+        nameserver: Nameserver,
+        altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
+        exploreUnknownAltitude: boolean = false
     ): Promise<{ [name: string]: MapServer }> {
-        const geoDomains = await LocationToGeoDomain.getGeoDomains(lat, lon, error_m, suffix);
+        const geoDomains = await LocationToGeoDomain.getGeoDomains(
+            lat, lon, error_m, suffix, altitude, exploreUnknownAltitude);
         let dnsLookupPromises: { [name: string]: Promise<DNSRecord[]> } = {};
         // Run all DNS lookups in parallel
         for (const domain of geoDomains) {
@@ -338,6 +347,8 @@ class MapsDiscovery {
         lat: number, lon: number, error_m: number,
         dataBlob: Blob, localizationType: string,
         vioPose: Pose | null = null,
+        altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
+        exploreUnknownAltitude: boolean = false,
         suffix: string = this.suffix
     ): Promise<MapServer | null> {
         this.currentLocalizationID += 1;
@@ -348,7 +359,9 @@ class MapsDiscovery {
             || (this.activeServer === null)) {
             consoleLog('Discovering map servers as the current list is empty', 'debug');
 
-            await this.discoverMapServers(lat, lon, error_m, suffix);
+            await this.discoverMapServers(
+                lat, lon, error_m,
+                altitude, exploreUnknownAltitude, suffix);
             let bestServer = await this.#relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
             this.activeServer = bestServer;
@@ -376,7 +389,9 @@ class MapsDiscovery {
         // If the localization error is still too high, re-initialize the discovery process.
         // This time, just return the best possible server.
         consoleLog('Localization error is still too high. Re-initializing the discovery process', 'debug');
-        await this.discoverMapServers(lat, lon, error_m, suffix);
+        await this.discoverMapServers(
+            lat, lon, error_m,
+            altitude, exploreUnknownAltitude, suffix);
         consoleLog('Relocalizing against the discovered servers', 'debug');
         bestServer = await this.#relocalizeWithinDiscoveredServers(
             dataBlob, localizationType, vioPose);

@@ -3,7 +3,7 @@ describe('Location to Servers', function () {
     // specific nameserver maintained at CMU. Because of the evolving nature of the project and hence
     // these DNS records, these will need to be updated on a regular basis.
     describe('Uncached requests', function () {
-        it('Should return the correct servers for a location 1 (CMU CIC 2300 Cubilces)', async function () {
+        it('Should return the correct servers for location 1', async function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
@@ -21,7 +21,7 @@ describe('Location to Servers', function () {
             assert.sameMembers(servers, expectedServers);
         });
 
-        it('Should return the correct servers for a location 2 (CMU CIC 2300 Arena)', async function () {
+        it('Should return the correct servers for location 2', async function () {
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
@@ -36,6 +36,42 @@ describe('Location to Servers', function () {
                 'lobby-2300.cmu.edu',
                 'passageway-2300.com'
             ]
+            assert.sameMembers(servers, expectedServers);
+        });
+
+        it('Should return the correct servers for location with known altitude', async function () {
+            const lat = 40.444034531976556;
+            const lon = -79.94661290569255;
+            const error_m = 5;
+            const altitude = 6.56;
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            await discoveryObj.discoverMapServers(lat, lon, error_m, altitude);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
+            const expectedServers = [
+                "known-altitude-map.cmu.edu"
+            ];
+            assert.sameMembers(servers, expectedServers);
+        });
+
+        it('Should return the correct servers for location with known altitude and unknown altitude exploration', async function () {
+            const lat = 40.444034531976556;
+            const lon = -79.94661290569255;
+            const error_m = 5;
+            const altitude = 6.56;
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            await discoveryObj.discoverMapServers(lat, lon, error_m, altitude, true);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
+            const expectedServers = [
+                "known-altitude-map.cmu.edu",
+                "arena-2300.cmu.edu",
+                "cubicles-maps.com",
+                "lobby-2300.cmu.edu",
+                "passageway-2300.com"
+            ];
             assert.sameMembers(servers, expectedServers);
         });
 
