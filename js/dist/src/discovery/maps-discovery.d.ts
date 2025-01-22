@@ -41,11 +41,11 @@ declare class MapsDiscovery {
      */
     discoverMapServers(lat: number, lon: number, error_m: number, altitude?: string | number, exploreUnknownAltitude?: boolean, suffix?: string): Promise<{
         [name: string]: MapServer;
-    }>;
+    } | void>;
     discoverMapsInNameserver(lat: number, lon: number, error_m: number, suffix: string, nameserver: Nameserver, altitude?: string | number, exploreUnknownAltitude?: boolean): Promise<{
         [name: string]: MapServer;
     }>;
-    updateMapServersFromDNSRecord(record: DNSRecord): Promise<void>;
+    updateMapServersFromDNSRecord(record: DNSRecord): Promise<MapServer | null>;
     isBetter(localization1: LocalizationData, localization2: LocalizationData | null): boolean;
     isServerAcceptable(mapServer: MapServer | null): boolean;
     localize(lat: number, lon: number, error_m: number, dataBlob: Blob, localizationType: string, vioPose?: Pose | null, altitude?: string | number, exploreUnknownAltitude?: boolean, suffix?: string): Promise<MapServer | null>;

@@ -121,7 +121,8 @@ class MapsDiscovery {
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
         exploreUnknownAltitude: boolean = false,
         suffix: string = this.suffix
-    ): Promise<{ [name: string]: MapServer }> {
+    ): Promise<{ [name: string]: MapServer } | void> {
+        let mapServerThisLocation: { [name: string]: MapServer } = {};
         // Add the root name server to the queue if it is empty
         if (this.nameserverQueue.isEmpty()) {
             let rootNameserverObj = new Nameserver(this.rootNameserver);
@@ -133,12 +134,13 @@ class MapsDiscovery {
             if (nameserver === null) {
                 break;
             }
-            await this.discoverMapsInNameserver(
+            let mapServersThisNameserver = await this.discoverMapsInNameserver(
                 lat, lon, error_m, suffix, nameserver,
                 altitude, exploreUnknownAltitude
             );
+            mapServerThisLocation = { ...mapServerThisLocation, ...mapServersThisNameserver };
         }
-        return this.mapServers;
+        return mapServerThisLocation;
     }
 
     async discoverMapsInNameserver(
@@ -149,6 +151,8 @@ class MapsDiscovery {
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
         exploreUnknownAltitude: boolean = false
     ): Promise<{ [name: string]: MapServer }> {
+        let mapServersThisNSThisLocation: { [name: string]: MapServer } = {};
+
         const geoDomains = await LocationToGeoDomain.getGeoDomains(
             lat, lon, error_m, suffix, altitude, exploreUnknownAltitude);
         let dnsLookupPromises: { [name: string]: Promise<DNSRecord[]> } = {};
@@ -159,13 +163,16 @@ class MapsDiscovery {
         for (const domain in dnsLookupPromises) {
             let dnsLookupResults = await dnsLookupPromises[domain];
             for (const record of dnsLookupResults) {
-                await this.updateMapServersFromDNSRecord(record);
+                let thisMapServer = await this.updateMapServersFromDNSRecord(record);
+                if (thisMapServer) {
+                    mapServersThisNSThisLocation[thisMapServer.name] = thisMapServer;
+                }
             }
         }
-        return this.mapServers;
+        return mapServersThisNSThisLocation;
     }
 
-    async updateMapServersFromDNSRecord(record: DNSRecord) {
+    async updateMapServersFromDNSRecord(record: DNSRecord): Promise<MapServer | null> {
         if (!('data' in record)) {
             return;
         }
@@ -192,6 +199,7 @@ class MapsDiscovery {
                     let mapServer = new MapServer(name);
                     await mapServer.queryCapabilities();
                     this.mapServers[name] = mapServer;
+                    return mapServer;
                 } catch (error) {
                     // If there is an error, the map server is not added to the list
                     consoleLog(error, 'error');
