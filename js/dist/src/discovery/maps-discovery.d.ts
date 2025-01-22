@@ -41,7 +41,7 @@ declare class MapsDiscovery {
      */
     discoverMapServers(lat: number, lon: number, error_m: number, altitude?: string | number, exploreUnknownAltitude?: boolean, suffix?: string): Promise<{
         [name: string]: MapServer;
-    } | void>;
+    }>;
     discoverMapsInNameserver(lat: number, lon: number, error_m: number, suffix: string, nameserver: Nameserver, altitude?: string | number, exploreUnknownAltitude?: boolean): Promise<{
         [name: string]: MapServer;
     }>;

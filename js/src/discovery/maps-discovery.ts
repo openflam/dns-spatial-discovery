@@ -121,7 +121,7 @@ class MapsDiscovery {
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
         exploreUnknownAltitude: boolean = false,
         suffix: string = this.suffix
-    ): Promise<{ [name: string]: MapServer } | void> {
+    ): Promise<{ [name: string]: MapServer }> {
         let mapServerThisLocation: { [name: string]: MapServer } = {};
         // Add the root name server to the queue if it is empty
         if (this.nameserverQueue.isEmpty()) {
