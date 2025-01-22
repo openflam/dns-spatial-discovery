@@ -192,7 +192,7 @@ class MapsDiscovery {
         if (recordDataJSON.type === 'MCNAME') {
             let name = recordDataJSON.data;
             if (name in this.mapServers) {
-                return; // Already discovered. Do not add again.
+                return this.mapServers[name]; // Already discovered. Do not add again.
             }
             if (this.nameFilter(name)) {
                 try {

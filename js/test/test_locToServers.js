@@ -103,6 +103,61 @@ describe('Location to Servers', function () {
             ]
             assert.sameMembers(servers, expectedServers);
         });
+
+        it('Return value of discoverMapServers should be correct', async function () {
+            let lat = 50.44403547793949;
+            let lon = -89.9466203369454;
+            let error_m = 5;
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            let thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            let servers = Object.values(thisMapServers).map(
+                (mapServer) => mapServer.name
+            );
+            let expectedServers = [
+            ]
+            assert.sameMembers(servers, expectedServers);
+
+            // Second attempt
+            lat = 40.44403547793949;
+            lon = -79.9466203369454;
+            thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            servers = Object.values(thisMapServers).map(
+                (mapServer) => mapServer.name
+            );
+            expectedServers = [
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
+            ]
+            assert.sameMembers(servers, expectedServers);
+
+            // Third attempt
+            lat = 50.44403547793949;
+            lon = -89.9466203369454;
+            thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            servers = Object.values(thisMapServers).map(
+                (mapServer) => mapServer.name
+            );
+            expectedServers = [
+            ];
+            assert.sameMembers(servers, expectedServers);
+
+            // Fourth attempt
+            lat = 40.44403547793949;
+            lon = -79.9466203369454;
+            thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            servers = Object.values(thisMapServers).map(
+                (mapServer) => mapServer.name
+            );
+            expectedServers = [
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
+            ]
+            assert.sameMembers(servers, expectedServers);
+        });
     });
 
     describe('Cached requests', function () {
