@@ -43,9 +43,23 @@ function mockLocalizationServer(mockAdapter: MockAdapter) {
         ]);
 
         // Mock get capabilities
-        mockAdapter.onGet(`${url}/capabilities`).reply(200, [
-            "image"
-        ]);
+        mockAdapter.onGet(`${url}/capabilities`).reply(200,
+            {
+                "commonName": "Dummy Map Server",
+                "iconURL": "/icon",
+                "services": [
+                    {
+                        "name": "localization",
+                        "url": "/localize",
+                        "types": ["image"],
+                    },
+                    {
+                        "name": "tileserver",
+                        "url": "/tileserver",
+                    }
+                ]
+            }
+        );
     }
 }
 

@@ -3,10 +3,22 @@ describe('MapServer', function () {
         let mapServer = new dnsspatialdiscovery.MapServer("arena-2300.cmu.edu");
         await mapServer.queryCapabilities();
 
-        let expectedCapabilities = [
-            "image"
-        ];
-        assert.sameMembers(mapServer.capabilities, expectedCapabilities);
+        let expectedCapabilities = {
+            "commonName": "Dummy Map Server",
+            "iconURL": "/icon",
+            "services": [
+                {
+                    "name": "localization",
+                    "url": "/localize",
+                    "types": ["image"],
+                },
+                {
+                    "name": "tileserver",
+                    "url": "/tileserver",
+                }
+            ]
+        };
+        assert.deepEqual(mapServer.capabilities, expectedCapabilities);
     });
 
     it('Query waypoints should work', async function () {

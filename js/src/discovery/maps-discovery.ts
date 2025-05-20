@@ -259,7 +259,7 @@ class MapsDiscovery {
         let mapServersFiltered: { [name: string]: MapServer } = {};
         for (let name in this.mapServers) {
             let server = this.mapServers[name];
-            if (server.capabilities.includes(localizationType)) {
+            if (server.localizationTypesSupported.includes(localizationType)) {
                 mapServersFiltered[name] = server;
             }
         }
