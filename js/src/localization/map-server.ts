@@ -150,4 +150,12 @@ class MapServer {
     }
 }
 
-export { MapServer, Pose, WayPoint, LocalizationResponse, LocalizationData };
+export {
+    MapServer,
+    Pose,
+    WayPoint,
+    LocalizationResponse,
+    LocalizationData,
+    ServiceDescription as MapServerServiceDescription,
+    MapServerCapabilities
+};

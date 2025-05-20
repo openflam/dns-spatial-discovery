@@ -42,4 +42,4 @@ declare class MapServer {
     localize(dataBlob: Blob, localizationType: string, currentVIOPose?: Pose | null, localizationID?: number | null): Promise<LocalizationData>;
     getLatestLocalizationData(): LocalizationData | null;
 }
-export { MapServer, Pose, WayPoint, LocalizationResponse, LocalizationData };
+export { MapServer, Pose, WayPoint, LocalizationResponse, LocalizationData, ServiceDescription as MapServerServiceDescription, MapServerCapabilities };

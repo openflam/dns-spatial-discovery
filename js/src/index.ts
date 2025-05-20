@@ -1,7 +1,7 @@
 import { DNS } from "./discovery/dns";
 import { LocationToGeoDomain } from "./discovery/location-to-geo-domain";
 import { MapsDiscovery } from "./discovery/maps-discovery";
-import { MapServer, LocalizationData, WayPoint } from "./localization/map-server";
+import { MapServer, LocalizationData, WayPoint, MapServerServiceDescription, MapServerCapabilities } from "./localization/map-server";
 import axios from "./utils/axiosInstance";
 import Events from "./utils/events";
 
@@ -21,6 +21,8 @@ export {
     MapServer,
     LocalizationData,
     WayPoint,
+    MapServerServiceDescription,
+    MapServerCapabilities,
     axios,
     Events,
     exportedForTesting
