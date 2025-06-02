@@ -30,6 +30,7 @@
     "webpack-merge": "^6.0.1"
   },
   "dependencies": {
+    "@types/geojson": "^7946.0.16",
     "axios": "^1.7.2"
   },
   "publishConfig": {

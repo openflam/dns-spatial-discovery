@@ -3,7 +3,12 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 5;
-        const baseGeoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getBaseGeoDomains(lat, lon, error_m);
+        const circleGeometry = {
+            'type': 'Circle',
+            'coordinates': [lon, lat],
+            'radius': error_m
+        };
+        const baseGeoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getBaseGeoDomains(circleGeometry);
 
         const expectedBaseGeoDomains = [
             ['1', '0', '3', '2', '2', '0', '0', '2', '3', '3', '3', '0', '0', '1', '2', '3', '1', '2', '2', '1', '0', '0', '1', '4'],
@@ -24,7 +29,12 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 0.00001;
-        const baseGeoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getBaseGeoDomains(lat, lon, error_m);
+        const circleGeometry = {
+            'type': 'Circle',
+            'coordinates': [lon, lat],
+            'radius': error_m
+        };
+        const baseGeoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getBaseGeoDomains(circleGeometry);
         const expectedBaseGeoDomains = [
             ['3', '2', '3', '2', '3', '1', '0', '2', '3', '3', '3', '0', '0', '1', '2', '3', '1', '2', '2', '1', '0', '0', '1', '4']
         ];
@@ -35,7 +45,12 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 123456;
-        const baseGeoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getBaseGeoDomains(lat, lon, error_m);
+        const circleGeometry = {
+            'type': 'Circle',
+            'coordinates': [lon, lat],
+            'radius': error_m
+        };
+        const baseGeoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getBaseGeoDomains(circleGeometry);
 
         const expectedBaseGeoDomains = [
             ['2', '1', '2', '1', '0', '0', '1', '4'],
@@ -56,7 +71,12 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 5;
-        const geoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(lat, lon, error_m, 'loc.arenaxr.org');
+        const circleGeometry = {
+            'type': 'Circle',
+            'coordinates': [lon, lat],
+            'radius': error_m
+        };
+        const geoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(circleGeometry, 'loc.arenaxr.org');
 
         const expectedGeoDomains = [
             "U.1.0.3.2.2.0.0.2.3.3.3.0.0.1.2.3.1.2.2.1.0.0.1.4.loc.arenaxr.org",
@@ -113,9 +133,14 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 5;
+        const circleGeometry = {
+            'type': 'Circle',
+            'coordinates': [lon, lat],
+            'radius': error_m
+        };
         const altitude = 6.56;
         const geoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(
-            lat, lon, error_m, 'loc.arenaxr.org', altitude);
+            circleGeometry, 'loc.arenaxr.org', altitude);
 
         const expectedGeoDomains = [
             "7.1.0.3.2.2.0.0.2.3.3.3.0.0.1.2.3.1.2.2.1.0.0.1.4.loc.arenaxr.org",
@@ -172,10 +197,15 @@ describe('Location to Geo Domain', function () {
         const lat = 40.44;
         const lon = -79.94;
         const error_m = 5;
+        const circleGeometry = {
+            'type': 'Circle',
+            'coordinates': [lon, lat],
+            'radius': error_m
+        };
         const altitude = 6.56;
         const exploreUnknownAltitude = true;
         const geoDomains = await dnsspatialdiscovery.LocationToGeoDomain.getGeoDomains(
-            lat, lon, error_m, 'loc.arenaxr.org', altitude, exploreUnknownAltitude);
+            circleGeometry, 'loc.arenaxr.org', altitude, exploreUnknownAltitude);
 
         const expectedGeoDomains = [
             "7.1.0.3.2.2.0.0.2.3.3.3.0.0.1.2.3.1.2.2.1.0.0.1.4.loc.arenaxr.org",

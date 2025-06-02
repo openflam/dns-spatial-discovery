@@ -5,6 +5,7 @@ import { DNSRecord } from './dns';
 import { CONFIG } from '../config';
 import { consoleLog } from '../utils/log';
 import Events from '../utils/events';
+import type { Geometry } from '../types/geojson';
 
 
 // Nameserver and the DNS object to use for querying DNS records from this name server
@@ -108,16 +109,14 @@ class MapsDiscovery {
 
     /**
      * 
-     * @param lat Latitude
-     * @param lon Longitude
+     * @param geometry The geometry to discover map servers for.
      * @param error_m Error in meters
      * @param suffix The suffix to append to the geo domains.
      * 
      * @returns Domains to query for the given location.
      */
     async discoverMapServers(
-        lat: number, lon: number,
-        error_m: number,
+        geometry: Geometry,
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
         exploreUnknownAltitude: boolean = false,
         suffix: string = this.suffix
@@ -135,7 +134,7 @@ class MapsDiscovery {
                 break;
             }
             let mapServersThisNameserver = await this.discoverMapsInNameserver(
-                lat, lon, error_m, suffix, nameserver,
+                geometry, suffix, nameserver,
                 altitude, exploreUnknownAltitude
             );
             mapServerThisLocation = { ...mapServerThisLocation, ...mapServersThisNameserver };
@@ -144,8 +143,7 @@ class MapsDiscovery {
     }
 
     async discoverMapsInNameserver(
-        lat: number, lon: number,
-        error_m: number,
+        geometry: Geometry,
         suffix: string,
         nameserver: Nameserver,
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
@@ -154,7 +152,8 @@ class MapsDiscovery {
         let mapServersThisNSThisLocation: { [name: string]: MapServer } = {};
 
         const geoDomains = await LocationToGeoDomain.getGeoDomains(
-            lat, lon, error_m, suffix, altitude, exploreUnknownAltitude);
+            geometry, suffix, altitude, exploreUnknownAltitude);
+
         let dnsLookupPromises: { [name: string]: Promise<DNSRecord[]> } = {};
         // Run all DNS lookups in parallel
         for (const domain of geoDomains) {
@@ -352,7 +351,7 @@ class MapsDiscovery {
     * If the localization error is still too high, re-initialize the discovery process.
     */
     async localize(
-        lat: number, lon: number, error_m: number,
+        geometry: Geometry,
         dataBlob: Blob, localizationType: string,
         vioPose: Pose | null = null,
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
@@ -368,7 +367,7 @@ class MapsDiscovery {
             consoleLog('Discovering map servers as the current list is empty', 'debug');
 
             await this.discoverMapServers(
-                lat, lon, error_m,
+                geometry,
                 altitude, exploreUnknownAltitude, suffix);
             let bestServer = await this.#relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
@@ -398,7 +397,7 @@ class MapsDiscovery {
         // This time, just return the best possible server.
         consoleLog('Localization error is still too high. Re-initializing the discovery process', 'debug');
         await this.discoverMapServers(
-            lat, lon, error_m,
+            geometry,
             altitude, exploreUnknownAltitude, suffix);
         consoleLog('Relocalizing against the discovered servers', 'debug');
         bestServer = await this.#relocalizeWithinDiscoveredServers(

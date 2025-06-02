@@ -6,7 +6,7 @@ The npm package is hosted within the `openflam` scope on Github npm registry.
 ```sh
 npm login --scope=@openflam --registry=https://npm.pkg.github.com
 <Login with your PERSONAL username and password>
-npm install @openflam/dnsspatialdiscovery@1.0.2
+npm install @openflam/dnsspatialdiscovery
 ```
 
 ## Usage
@@ -15,13 +15,18 @@ npm install @openflam/dnsspatialdiscovery@1.0.2
 And then the library can be use in javascript as:
 ```javascript
 const suffix = "loc." // Suffix to the discovered geodomains
-const rootNameserver = "https://loc-nameserver.net";
+const rootNameserver = "https://loc-nameserver.net"; // By default, Google's DNS server is used (https://dns.google/resolve)
 const discoveryObj = new dnsspatialdiscovery.MapsDiscovery(suffix, rootNameserver);
 
 let localizationType = "image";
 // Get lat, lon, error_m, vioPose, dataBlob
+let circleGeometry = {
+    type: 'Circle',
+    coordinates: [lon, lat],
+    radius: error_m
+};
 var localizationResult = discoveryObj.localize(
-    lat, lon, error_m,
+    circleGeometry,
     dataBlob, localizationType, vioPose);
 ```
 

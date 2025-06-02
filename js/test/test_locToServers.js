@@ -7,8 +7,13 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(circleGeometry);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -25,8 +30,13 @@ describe('Location to Servers', function () {
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(circleGeometry);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -43,9 +53,14 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             const altitude = 6.56;
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m, altitude);
+            await discoveryObj.discoverMapServers(circleGeometry, altitude);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -59,9 +74,14 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             const altitude = 6.56;
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m, altitude, true);
+            await discoveryObj.discoverMapServers(circleGeometry, altitude, true);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -79,8 +99,13 @@ describe('Location to Servers', function () {
             let lat = 50.44403547793949;
             let lon = -89.9466203369454;
             let error_m = 5;
+            let circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(circleGeometry);
             let servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -91,7 +116,12 @@ describe('Location to Servers', function () {
             // Second attempt
             lat = 40.44403547793949;
             lon = -79.9466203369454;
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            await discoveryObj.discoverMapServers(circleGeometry);
             servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -108,8 +138,13 @@ describe('Location to Servers', function () {
             let lat = 50.44403547793949;
             let lon = -89.9466203369454;
             let error_m = 5;
+            let circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            let thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            let thisMapServers = await discoveryObj.discoverMapServers(circleGeometry);
             let servers = Object.values(thisMapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -120,7 +155,12 @@ describe('Location to Servers', function () {
             // Second attempt
             lat = 40.44403547793949;
             lon = -79.9466203369454;
-            thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            thisMapServers = await discoveryObj.discoverMapServers(circleGeometry);
             servers = Object.values(thisMapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -135,7 +175,12 @@ describe('Location to Servers', function () {
             // Third attempt
             lat = 50.44403547793949;
             lon = -89.9466203369454;
-            thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            thisMapServers = await discoveryObj.discoverMapServers(circleGeometry);
             servers = Object.values(thisMapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -146,7 +191,12 @@ describe('Location to Servers', function () {
             // Fourth attempt
             lat = 40.44403547793949;
             lon = -79.9466203369454;
-            thisMapServers = await discoveryObj.discoverMapServers(lat, lon, error_m);
+            circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            thisMapServers = await discoveryObj.discoverMapServers(circleGeometry);
             servers = Object.values(thisMapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -167,15 +217,25 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
             discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            await discoveryObj.discoverMapServers(circleGeometry);
         });
 
         it('Should return the correct servers for a location 1 (CMU CIC 2300 Cubilces)', async function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            await discoveryObj.discoverMapServers(circleGeometry);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -192,7 +252,12 @@ describe('Location to Servers', function () {
             const lat = 40.44403547793949;
             const lon = -79.9466203369454;
             const error_m = 5;
-            await discoveryObj.discoverMapServers(lat, lon, error_m, 'loc.');
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            await discoveryObj.discoverMapServers(circleGeometry);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -213,7 +278,12 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            await discoveryObj.discoverMapServers(circleGeometry);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -230,7 +300,12 @@ describe('Location to Servers', function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
             const error_m = 5;
-            await discoveryObj.discoverMapServers(lat, lon, error_m);
+            const circleGeometry = {
+                'type': 'Circle',
+                'coordinates': [lon, lat],
+                'radius': error_m
+            };
+            await discoveryObj.discoverMapServers(circleGeometry);
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );

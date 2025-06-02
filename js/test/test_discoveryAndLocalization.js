@@ -1,11 +1,12 @@
 describe('Map Discovery and Localization', function () {
     it('MNS records should work', async function () {
         const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://loc-nameserver.net");
-        await discoveryObj.discoverMapServers(
-            CLIENT_DATA[0].lat,
-            CLIENT_DATA[0].lon,
-            CLIENT_DATA[0].error_m
-        );
+        const circleGeometry = {
+            type: 'Circle',
+            coordinates: [CLIENT_DATA[0].lon, CLIENT_DATA[0].lat],
+            radius: CLIENT_DATA[0].error_m
+        }
+        await discoveryObj.discoverMapServers(circleGeometry);
         const servers = Object.values(discoveryObj.mapServers).map(
             (mapServer) => mapServer.name
         );
@@ -26,8 +27,13 @@ describe('Map Discovery and Localization', function () {
         let serverConfidenceSequence = [];
 
         for (clientData of CLIENT_DATA) {
+            let circleGeometry = {
+                type: 'Circle',
+                coordinates: [clientData.lon, clientData.lat],
+                radius: clientData.error_m
+            };
             let bestMapServer = await discoveryObj.localize(
-                clientData.lat, clientData.lon, clientData.error_m,
+                circleGeometry,
                 new Blob([clientData.imageName]), "image", clientData.vioPose
             );
             mapServerSequence.push(bestMapServer.name);
@@ -74,8 +80,13 @@ describe('Map Discovery and Localization', function () {
         dnsspatialdiscovery.Events.on('nomap', () => eventsSequence.push('nomap'));
 
         for (clientData of CLIENT_DATA) {
+            let circleGeometry = {
+                type: 'Circle',
+                coordinates: [clientData.lon, clientData.lat],
+                radius: clientData.error_m
+            };
             await discoveryObj.localize(
-                clientData.lat, clientData.lon, clientData.error_m,
+                circleGeometry,
                 new Blob([clientData.imageName]), "image", clientData.vioPose
             );
         }
