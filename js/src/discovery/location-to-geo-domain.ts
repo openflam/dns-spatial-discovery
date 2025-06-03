@@ -3,6 +3,21 @@ import { tokensToDomainDigits } from "../utils/s2-conversions";
 import { CONFIG } from "../config";
 import type { Geometry } from '../types/geojson';
 
+type LatLng = {
+    lat: number;
+    lng: number;
+};
+
+const checkClockwise = (points: LatLng[]): boolean => {
+    var sum = 0;
+    for (var i = 0; i < points.length; i++) {
+        var p1 = points[i];
+        var p2 = points[(i + 1) % points.length];
+        sum += (p2.lng - p1.lng) * (p2.lat + p1.lat);
+    }
+    return sum < 0;
+}
+
 class LocationToGeoDomain {
     static async getBaseGeoDomains(geometry: Geometry): Promise<string[][]> {
         let baseGeoDomains: string[][];
@@ -18,6 +33,11 @@ class LocationToGeoDomain {
             var polygon: LatLng[] = [];
             for (let coord of geometry.coordinates[0]) {
                 polygon.push({ lat: coord[1], lng: coord[0] });
+            }
+            // Check if the polygon is clockwise
+            if (!checkClockwise(polygon)) {
+                // Reverse the polygon if it is not clockwise
+                polygon = polygon.reverse();
             }
             const s2Tokens = await s2PolygonCoverer(polygon);
             baseGeoDomains = await tokensToDomainDigits(s2Tokens);

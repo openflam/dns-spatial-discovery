@@ -1,7 +1,7 @@
 import { loadCircleCovererWasm } from "../utils/wasm/load-wasm";
 import { consoleLog } from "../utils/log";
 
-async function s2CircleCoverer(latLng: LatLng, radius: number): Promise<string[]> {
+async function s2CircleCoverer(latLng: { lat: number, lng: number }, radius: number): Promise<string[]> {
     if (typeof s2CircleCovererGo === "undefined") {
         consoleLog("Loading WASM", "debug");
         await loadCircleCovererWasm();
@@ -15,7 +15,7 @@ async function s2CircleCoverer(latLng: LatLng, radius: number): Promise<string[]
     );
 }
 
-async function s2PolygonCoverer(polygon: LatLng[]): Promise<string[]> {
+async function s2PolygonCoverer(polygon: { lat: number, lng: number }[]): Promise<string[]> {
     if (typeof s2PolygonCovererGo === "undefined") {
         consoleLog("Loading WASM", "debug");
         await loadCircleCovererWasm();
