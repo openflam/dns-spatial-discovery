@@ -1,4 +1,4 @@
-import { s2CircleCoverer } from "../circle-coverer/circle-coverer";
+import { s2CircleCoverer, s2PolygonCoverer } from "../region-coverer/region-coverer";
 import { tokenToDomainDigits } from "../utils/s2-conversions";
 import { CONFIG } from "../config";
 import type { Geometry } from '../types/geojson';
@@ -11,12 +11,24 @@ class LocationToGeoDomain {
             const lon = geometry.coordinates[0];
             const radius = geometry.radius;
 
-            const s2Tokens = await s2CircleCoverer(lat, lon, radius);
+            const s2Tokens = await s2CircleCoverer({ lat: lat, lng: lon }, radius);
             for (let s2Token of s2Tokens) {
                 let domainDigits = await tokenToDomainDigits(s2Token);
                 baseGeoDomains.push(domainDigits);
             }
         }
+        else if (geometry.type === 'Polygon') {
+            var polygon: { lat: number, lng: number }[] = [];
+            for (let coord of geometry.coordinates[0]) {
+                polygon.push({ lat: coord[1], lng: coord[0] });
+            }
+            const s2Tokens = await s2PolygonCoverer(polygon);
+            for (let s2Token of s2Tokens) {
+                let domainDigits = await tokenToDomainDigits(s2Token);
+                baseGeoDomains.push(domainDigits);
+            }
+        }
+
         else {
             // Not implemented for other geometry types yet
             throw new Error('Geometry type not supported. Only Circle is currently implemented.');

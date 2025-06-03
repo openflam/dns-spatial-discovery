@@ -21,4 +21,4 @@ The following modifications were required:
 
 ## Testing
 
-Run tests by running `cd s2_circle_coverer && go test`.
+Run tests by running `cd s2_region_coverer && go test`.

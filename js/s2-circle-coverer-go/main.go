@@ -7,8 +7,9 @@ import (
 )
 
 func main() {
-	c := make(chan struct{}, 0)
+	c := make(chan struct{})
 	js.Global().Set("s2CircleCovererGo", js.FuncOf(js_wrapper.JSS2CellsInCircle))
+	js.Global().Set("s2PolygonCovererGo", js.FuncOf(js_wrapper.JSS2CellsInPolygon))
 	js.Global().Set("s2BinaryIDToTokenGo", js.FuncOf(js_wrapper.JSS2BinaryIDToToken))
 	js.Global().Set("s2TokenToBinaryIDGo", js.FuncOf(js_wrapper.JSS2TokenToBinaryID))
 	<-c

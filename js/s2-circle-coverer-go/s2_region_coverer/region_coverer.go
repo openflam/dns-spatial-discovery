@@ -1,6 +1,6 @@
 // Code inspired by code in: https://github.com/akhenakh/ws2
 
-package s2_circle_coverer
+package s2_region_coverer
 
 import (
 	"errors"
@@ -49,6 +49,31 @@ func S2CellsInCircle(center LatLng, radius float64, minLevel, maxLevel, maxCells
 		// because of the maxLevel. In this case we use the external covering.
 		covering = rc.Covering(cap)
 	}
+
+	return covering, nil
+}
+
+// S2CellsInPolygon takes a list of LatLng and returns
+// a list of S2 Cell IDs that cover the polygon defined by the points.
+func S2CellsInPolygon(points []LatLng, minLevel, maxLevel, maxCells int) ([]s2.CellID, error) {
+	// Convert LatLng points to s2.Point
+	var pointsS2 []s2.Point
+	for _, point := range points {
+		latLng := s2.LatLngFromDegrees(point.Lat, point.Lng)
+		pointsS2 = append(pointsS2, s2.PointFromLatLng(latLng))
+	}
+
+	// Create an s2.Loop from the points
+	loop := s2.LoopFromPoints(pointsS2)
+
+	// Create a RegionCoverer
+	rc := &s2.RegionCoverer{
+		MinLevel: minLevel,
+		MaxLevel: maxLevel,
+		MaxCells: maxCells,
+	}
+	// Get the covering cells
+	covering := rc.Covering(loop)
 
 	return covering, nil
 }
