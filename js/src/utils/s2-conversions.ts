@@ -14,6 +14,21 @@ async function tokenToDomainDigits(s2Token: string): Promise<string[]> {
     return domainDigits;
 }
 
+/**
+ * S2 hex tokens to domain digits
+ * @param {string[]} s2Tokens S2 hex tokens
+ * @returns {Promise<string[][]>} Domain digits for each S2 token
+ */
+async function tokensToDomainDigits(s2Tokens: string[]): Promise<string[][]> {
+    if (typeof s2TokenToBinaryIDGo === 'undefined') {
+        consoleLog("Loading WASM", "debug");
+        await loadCircleCovererWasm();
+    }
+    let domainDigitsPromises = s2Tokens.map(token => tokenToDomainDigits(token));
+    let domainDigits = await Promise.all(domainDigitsPromises);
+    return domainDigits;
+}
+
 /*
  * S2 binary ID -> Domain digits
  */
@@ -43,4 +58,4 @@ function binaryIDToDomainDigits(binaryID: string): string[] {
     return domainDigits;
 }
 
-export { tokenToDomainDigits };
+export { tokenToDomainDigits, tokensToDomainDigits };

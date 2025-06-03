@@ -1,32 +1,26 @@
 import { s2CircleCoverer, s2PolygonCoverer } from "../region-coverer/region-coverer";
-import { tokenToDomainDigits } from "../utils/s2-conversions";
+import { tokensToDomainDigits } from "../utils/s2-conversions";
 import { CONFIG } from "../config";
 import type { Geometry } from '../types/geojson';
 
 class LocationToGeoDomain {
     static async getBaseGeoDomains(geometry: Geometry): Promise<string[][]> {
-        const baseGeoDomains: string[][] = [];
+        let baseGeoDomains: string[][];
         if (geometry.type === 'Circle') {
             const lat = geometry.coordinates[1];
             const lon = geometry.coordinates[0];
             const radius = geometry.radius;
 
             const s2Tokens = await s2CircleCoverer({ lat: lat, lng: lon }, radius);
-            for (let s2Token of s2Tokens) {
-                let domainDigits = await tokenToDomainDigits(s2Token);
-                baseGeoDomains.push(domainDigits);
-            }
+            baseGeoDomains = await tokensToDomainDigits(s2Tokens);
         }
         else if (geometry.type === 'Polygon') {
-            var polygon: { lat: number, lng: number }[] = [];
+            var polygon: LatLng[] = [];
             for (let coord of geometry.coordinates[0]) {
                 polygon.push({ lat: coord[1], lng: coord[0] });
             }
             const s2Tokens = await s2PolygonCoverer(polygon);
-            for (let s2Token of s2Tokens) {
-                let domainDigits = await tokenToDomainDigits(s2Token);
-                baseGeoDomains.push(domainDigits);
-            }
+            baseGeoDomains = await tokensToDomainDigits(s2Tokens);
         }
 
         else {

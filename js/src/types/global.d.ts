@@ -22,5 +22,5 @@ declare const s2PolygonCovererGo: (
     minLevel: number,
     maxLevel: number,
     maxCells: number) => Promise<string[]>;
-declare const s2BinaryIDToTokenGo: any;
-declare const s2TokenToBinaryIDGo: any;
+declare const s2BinaryIDToTokenGo: (binaryID: string) => string;
+declare const s2TokenToBinaryIDGo: (s2Token: string) => string;

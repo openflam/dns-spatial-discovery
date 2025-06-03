@@ -49,6 +49,52 @@ describe('Location to Servers', function () {
             assert.sameMembers(servers, expectedServers);
         });
 
+        it('Should return the correct servers for polygon', async function () {
+            const polygonGeometry = {
+                "type": "Polygon",
+                "coordinates": [
+                    [
+                        [
+                            -79.94671797604462,
+                            40.444304523242465
+                        ],
+                        [
+                            -79.94687042194538,
+                            40.44372619379834
+                        ],
+                        [
+                            -79.94637843744837,
+                            40.44361896499586
+                        ],
+                        [
+                            -79.9462768068479,
+                            40.4438386959647
+                        ],
+                        [
+                            -79.9462929753527,
+                            40.44433089072757
+                        ],
+                        [
+                            -79.94671797604462,
+                            40.444304523242465
+                        ]
+                    ]
+                ]
+            }
+            const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
+            await discoveryObj.discoverMapServers(polygonGeometry);
+            const servers = Object.values(discoveryObj.mapServers).map(
+                (mapServer) => mapServer.name
+            );
+            const expectedServers = [
+                'arena-2300.cmu.edu',
+                'cubicles-maps.com',
+                'lobby-2300.cmu.edu',
+                'passageway-2300.com'
+            ]
+            assert.sameMembers(servers, expectedServers);
+        });
+
         it('Should return the correct servers for location with known altitude', async function () {
             const lat = 40.444034531976556;
             const lon = -79.94661290569255;
