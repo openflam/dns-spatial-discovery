@@ -1,0 +1,14 @@
+**/*
+
+# Include compiled output and documentation
+!/dist/**
+!README.md
+
+# Exclude Webpack config files
+dist/webpack.common.d.ts
+dist/webpack.dev.d.ts
+dist/webpack.prod.d.ts
+dist/webpack.test.d.ts
+
+# Exclude test outputs
+dist/test/**
