@@ -17,7 +17,7 @@ func TestS2CellsInCircle(t *testing.T) {
 		"8834f2215c4", "8834f2215cc",
 	}
 
-	cellIDs, err := S2CellsInCircle(center, radius, minLevel, maxLevel, maxCells)
+	cellIDs, err := S2CellsInCircle(center, radius, minLevel, maxLevel, maxCells, true)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}
@@ -52,7 +52,7 @@ func TestS2CellsInPolygon(t *testing.T) {
 		"8834f22151c", "8834f2215b",
 	}
 
-	cellIDs, err := S2CellsInPolygon(points, minLevel, maxLevel, maxCells)
+	cellIDs, err := S2CellsInPolygon(points, minLevel, maxLevel, maxCells, false)
 	if err != nil {
 		t.Errorf("Unexpected error: %v", err)
 	}

@@ -18,9 +18,10 @@ func JSS2CellsInCircle(this js.Value, p []js.Value) interface{} {
 	minLevel := p[2].Int()
 	maxLevel := p[3].Int()
 	maxCells := p[4].Int()
+	interior := p[5].Bool()
 
 	// Get the covering cells
-	covering, _ := s2_region_coverer.S2CellsInCircle(center, radius, minLevel, maxLevel, maxCells)
+	covering, _ := s2_region_coverer.S2CellsInCircle(center, radius, minLevel, maxLevel, maxCells, interior)
 
 	// Convert the Go slice to a JavaScript array
 	coveringJsArray := js.Global().Get("Array").New(len(covering))
@@ -47,9 +48,10 @@ func JSS2CellsInPolygon(this js.Value, p []js.Value) interface{} {
 	minLevel := p[1].Int()
 	maxLevel := p[2].Int()
 	maxCells := p[3].Int()
+	interior := p[4].Bool()
 
 	// Get the covering cells
-	covering, _ := s2_region_coverer.S2CellsInPolygon(pointsGo, minLevel, maxLevel, maxCells)
+	covering, _ := s2_region_coverer.S2CellsInPolygon(pointsGo, minLevel, maxLevel, maxCells, interior)
 
 	// Convert the Go slice to a JavaScript array
 	coveringJsArray := js.Global().Get("Array").New(len(covering))

@@ -23,7 +23,7 @@ func s2RadialAreaMeters(radius float64) float64 {
 
 // S2CellsInCircle takes a LatLng as center and the radius of the circle
 // and returns a list of S2 Cell IDs that cover the circle.
-func S2CellsInCircle(center LatLng, radius float64, minLevel, maxLevel, maxCells int) ([]s2.CellID, error) {
+func S2CellsInCircle(center LatLng, radius float64, minLevel int, maxLevel int, maxCells int, interior bool) ([]s2.CellID, error) {
 	if minLevel < 0 || minLevel > 30 {
 		return nil, errors.New("minLevel must be between 0 and 30")
 	}
@@ -41,12 +41,12 @@ func S2CellsInCircle(center LatLng, radius float64, minLevel, maxLevel, maxCells
 		MaxLevel: maxLevel,
 		MaxCells: maxCells,
 	}
-	// Get the covering cells
-	covering := rc.InteriorCovering(cap)
 
-	if len(covering) == 0 {
-		// Sometimes for small radius, the internal covering is empty.
-		// because of the maxLevel. In this case we use the external covering.
+	// Get the covering cells
+	var covering []s2.CellID
+	if interior {
+		covering = rc.InteriorCovering(cap)
+	} else {
 		covering = rc.Covering(cap)
 	}
 
@@ -55,7 +55,7 @@ func S2CellsInCircle(center LatLng, radius float64, minLevel, maxLevel, maxCells
 
 // S2CellsInPolygon takes a list of LatLng and returns
 // a list of S2 Cell IDs that cover the polygon defined by the points.
-func S2CellsInPolygon(points []LatLng, minLevel, maxLevel, maxCells int) ([]s2.CellID, error) {
+func S2CellsInPolygon(points []LatLng, minLevel int, maxLevel int, maxCells int, interior bool) ([]s2.CellID, error) {
 	// Convert LatLng points to s2.Point
 	var pointsS2 []s2.Point
 	for _, point := range points {
@@ -72,8 +72,14 @@ func S2CellsInPolygon(points []LatLng, minLevel, maxLevel, maxCells int) ([]s2.C
 		MaxLevel: maxLevel,
 		MaxCells: maxCells,
 	}
+
 	// Get the covering cells
-	covering := rc.Covering(loop)
+	var covering []s2.CellID
+	if interior {
+		covering = rc.InteriorCovering(loop)
+	} else {
+		covering = rc.Covering(loop)
+	}
 
 	return covering, nil
 }

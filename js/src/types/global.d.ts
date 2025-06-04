@@ -10,11 +10,13 @@ declare const s2CircleCovererGo: (
     radius: number,
     minLevel: number,
     maxLevel: number,
-    maxCells: number) => Promise<string[]>;
+    maxCells: number,
+    interior: boolean) => string[];
 declare const s2PolygonCovererGo: (
     polygon: { lat: number, lng: number }[],
     minLevel: number,
     maxLevel: number,
-    maxCells: number) => Promise<string[]>;
+    maxCells: number,
+    interior: boolean) => string[];
 declare const s2BinaryIDToTokenGo: (binaryID: string) => string;
 declare const s2TokenToBinaryIDGo: (s2Token: string) => string;
