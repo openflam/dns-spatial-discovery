@@ -15,7 +15,9 @@ async function queryLocalize(mapServer: MapServer,
     formData.append(localizationType, dataBlob);
 
     try {
-        let response = await axios.post(url, formData);
+        let response = await axios.post(url, formData, { 
+                withCredentials: true 
+            });
         responseData = response.data;
     }
     catch (error) {

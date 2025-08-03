@@ -66,7 +66,9 @@ class MapServer {
     async queryCapabilities(): Promise<MapServerCapabilities> {
         const url = `https://${this.name}/capabilities`;
         try {
-            const response = await axios.get(url);
+            const response = await axios.get(url, { 
+                withCredentials: true 
+            });
             this.capabilities = response.data;
             this.localizationTypesSupported = this.getLocalizationTypes(this.capabilities);
         }
@@ -93,7 +95,9 @@ class MapServer {
     async queryWaypoints(): Promise<WayPoint[]> {
         const url = `https://${this.name}/waypoints`;
         try {
-            const response = await axios.get(url);
+            const response = await axios.get(url, { 
+                withCredentials: true 
+            });
             this.waypointsList = response.data;
         }
         catch (error) {
