@@ -1,5 +1,5 @@
 import axios from "../utils/axiosInstance";
-import { queryLocalize, errorWithVIO } from "./localize";
+import { queryLocalize, errorWithVIO } from "../services/localization/localize";
 
 // Pose is a 2D array of numbers. It represents the position and orientation.
 type Pose = number[][];

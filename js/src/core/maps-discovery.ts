@@ -1,6 +1,6 @@
 import { DNS } from './dns';
 import { LocationToGeoDomain } from './location-to-geo-domain';
-import { MapServer, LocalizationData, Pose } from '../localization/map-server';
+import { MapServer, LocalizationData, Pose } from './map-server';
 import { DNSRecord } from './dns';
 import { CONFIG } from '../config';
 import { consoleLog } from '../utils/log';

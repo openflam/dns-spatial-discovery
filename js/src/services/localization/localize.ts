@@ -1,7 +1,7 @@
 // import { subtract, norm, abs } from "mathjs";
-import { LocalizationData, MapServer } from "./map-server";
-import { LocalizationResponse } from "./map-server";
-import axios from "../utils/axiosInstance";
+import { LocalizationData, MapServer } from "../../core/map-server";
+import { LocalizationResponse } from "../../core/map-server";
+import axios from "../../utils/axiosInstance";
 
 async function queryLocalize(mapServer: MapServer,
     dataBlob: Blob, localizationType: string): Promise<LocalizationResponse> {
