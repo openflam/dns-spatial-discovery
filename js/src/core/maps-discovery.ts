@@ -6,6 +6,7 @@ import { CONFIG } from '../config';
 import { consoleLog } from '../utils/log';
 import Events from '../utils/events';
 import type { Geometry } from '../types/geojson';
+import { queryAllDiscoveryServices } from '../services/discover';
 
 
 // Nameserver and the DNS object to use for querying DNS records from this name server
@@ -108,18 +109,21 @@ class MapsDiscovery {
     }
 
     /**
-     * 
+     * Discover map servers for a given location using the DNS-based discovery service.
+     * Optionally, it can use individual map servers' discovery services to discover 'children' maps.
      * @param geometry The geometry to discover map servers for.
-     * @param error_m Error in meters
-     * @param suffix The suffix to append to the geo domains.
-     * 
-     * @returns Domains to query for the given location.
+     * @param altitude Altitude in meters.
+     * @param exploreUnknownAltitude If true, a set of geodomains with altitude set to 'U' is also explored.
+     * @param suffix The suffix to append to the geo domains. Default is from the suffix property of this object.
+     * @param useDiscoveryService If true, the discovery service of individual map servers is used to discover children map servers.
+     * @returns A promise that resolves to a dictionary of discovered map servers. 
      */
     async discoverMapServers(
         geometry: Geometry,
         altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
         exploreUnknownAltitude: boolean = false,
-        suffix: string = this.suffix
+        suffix: string = this.suffix,
+        useDiscoveryService: boolean = true,
     ): Promise<{ [name: string]: MapServer }> {
         let mapServerThisLocation: { [name: string]: MapServer } = {};
         // Add the root name server to the queue if it is empty
@@ -138,6 +142,14 @@ class MapsDiscovery {
                 altitude, exploreUnknownAltitude
             );
             mapServerThisLocation = { ...mapServerThisLocation, ...mapServersThisNameserver };
+        }
+        if (useDiscoveryService) {
+            let childMapServersDisocvered = await queryAllDiscoveryServices(
+                this,
+                geometry,
+                mapServerThisLocation,
+            );
+            mapServerThisLocation = { ...mapServerThisLocation, ...childMapServersDisocvered };
         }
         return mapServerThisLocation;
     }

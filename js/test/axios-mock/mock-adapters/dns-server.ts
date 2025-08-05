@@ -4,8 +4,9 @@ import { DNSZone } from 'dns-zonefile';
 
 import { CMU_NS_ZONEFILE } from './zonefiles/loc-server';
 import { CIC_CNAMES_ZONEFILE } from './zonefiles/cmu-ns-server';
+import { INDIA_NS_ZONEFILE } from './zonefiles/india-ns-server';
 
-const zoneFiles = [CMU_NS_ZONEFILE, CIC_CNAMES_ZONEFILE];
+const zoneFiles = [CMU_NS_ZONEFILE, CIC_CNAMES_ZONEFILE, INDIA_NS_ZONEFILE];
 
 interface DNSResponseRecord {
     name: string;

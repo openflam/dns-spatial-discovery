@@ -78,6 +78,17 @@ class MapServer {
         return this.capabilities;
     }
 
+    // Get a specific service from capabilities.
+    getService(serviceName: string): ServiceDescription | null {
+        if (!('services' in this.capabilities) || this.capabilities.services.length === 0) {
+            return null;
+        }
+        const service = this.capabilities.services.find((service: ServiceDescription) => {
+            return service.name === serviceName;
+        });
+        return service || null;
+    }
+
     // Get the localization types supported from capabilities.
     getLocalizationTypes(capabilities: MapServerCapabilities): string[] {
         if (!('services' in capabilities) || capabilities.services.length === 0) {
