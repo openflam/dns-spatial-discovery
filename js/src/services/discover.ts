@@ -129,4 +129,4 @@ async function queryDiscoveryService(
     return childMapServersDiscovered;
 }
 
-export { queryAllDiscoveryServices };
+export { queryAllDiscoveryServices, queryDiscoveryService };

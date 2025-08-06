@@ -3,6 +3,7 @@ import { LocationToGeoDomain } from "./core/location-to-geo-domain";
 import { Geometry } from "./types/geojson";
 import { MapsDiscovery } from "./core/maps-discovery";
 import { MapServer, LocalizationData, WayPoint, MapServerServiceDescription, MapServerCapabilities } from "./core/map-server";
+import { queryAllDiscoveryServices, queryDiscoveryService } from "./services/discover";
 import axios from "./utils/axiosInstance";
 import Events from "./utils/events";
 
@@ -16,6 +17,12 @@ var exportedForTesting = {
     tokenToDomainDigits: tokenToDomainDigits
 };
 
+const Services = {
+    // Discovery service for map servers
+    queryAllDiscoveryServices: queryAllDiscoveryServices,
+    queryDiscoveryService: queryDiscoveryService
+}
+
 export {
     DNS,
     LocationToGeoDomain,
@@ -28,5 +35,6 @@ export {
     Geometry,
     axios,
     Events,
-    exportedForTesting
+    exportedForTesting,
+    Services
 };
