@@ -99,6 +99,11 @@ async function queryDiscoveryService(
             // Currently only Polygon geometries are supported
             return {};
         }
+
+        // Remove the last coordinate from the polygon geometry.
+        // This is because the implmentation of the discovery service expects exactly 4 coordinates.
+        geometry.coordinates[0].pop(); // Remove the last coordinate.
+
         const quad = geometry.coordinates[0]
             .map(coord => coord.join(",")) // join lon and lat
             .join(","); // flatten into single string

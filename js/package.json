@@ -4,7 +4,7 @@
     "type": "git",
     "url": "git+https://github.com/openflam/dns-spatial-discovery.git.git"
   },
-  "version": "4.4.1",
+  "version": "4.4.2",
   "description": "Using the DNS to disocvery localization servers based on location",
   "main": "dist/bundle.js",
   "types": "dist/src/index.d.ts",
@@ -12,6 +12,7 @@
     "build:dev": "webpack --config webpack.dev.js",
     "build:prod": "webpack --config webpack.prod.js",
     "build:test": "webpack --config webpack.test.js",
+    "prepare": "npm run build:prod",
     "serve": "http-server . --port 9000 -o /test/test.html",
     "test": "npm run build:dev && npm run build:test && npm run serve",
     "test:prod": "npm run build:prod && npm run build:test && npm run serve"
