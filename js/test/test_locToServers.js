@@ -106,7 +106,7 @@ describe('Location to Servers', function () {
             };
             const altitude = 6.56;
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(circleGeometry, altitude);
+            await discoveryObj.discoverMapServers(circleGeometry, { altitude: altitude });
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );
@@ -127,7 +127,7 @@ describe('Location to Servers', function () {
             };
             const altitude = 6.56;
             const discoveryObj = new dnsspatialdiscovery.MapsDiscovery("loc.", "https://cmu-nameserver.cmu.edu");
-            await discoveryObj.discoverMapServers(circleGeometry, altitude, true);
+            await discoveryObj.discoverMapServers(circleGeometry, { altitude: altitude, exploreUnknownAltitude: true });
             const servers = Object.values(discoveryObj.mapServers).map(
                 (mapServer) => mapServer.name
             );

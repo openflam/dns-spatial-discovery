@@ -118,13 +118,22 @@ class MapsDiscovery {
      * @param useDiscoveryService If true, the discovery service of individual map servers is used to discover children map servers.
      * @returns A promise that resolves to a dictionary of discovered map servers. 
      */
+
     async discoverMapServers(
         geometry: Geometry,
-        altitude: string | number = CONFIG.UNKOWN_ALTITUDE_CODE,
-        exploreUnknownAltitude: boolean = false,
-        suffix: string = this.suffix,
-        useDiscoveryService: boolean = true,
+        options?: {
+            altitude?: string | number,
+            exploreUnknownAltitude?: boolean,
+            suffix?: string,
+            useDiscoveryService?: boolean,
+        }
     ): Promise<{ [name: string]: MapServer }> {
+        const {
+            altitude = CONFIG.UNKOWN_ALTITUDE_CODE,
+            exploreUnknownAltitude = false,
+            suffix = this.suffix,
+            useDiscoveryService = true,
+        } = options || {};
         let mapServerThisLocation: { [name: string]: MapServer } = {};
         // Add the root name server to the queue if it is empty
         if (this.nameserverQueue.isEmpty()) {
@@ -380,7 +389,12 @@ class MapsDiscovery {
 
             await this.discoverMapServers(
                 geometry,
-                altitude, exploreUnknownAltitude, suffix);
+                {
+                    altitude: altitude,
+                    exploreUnknownAltitude: exploreUnknownAltitude,
+                    suffix: suffix
+                }
+            );
             let bestServer = await this.#relocalizeWithinDiscoveredServers(
                 dataBlob, localizationType, vioPose);
             this.activeServer = bestServer;
@@ -410,7 +424,12 @@ class MapsDiscovery {
         consoleLog('Localization error is still too high. Re-initializing the discovery process', 'debug');
         await this.discoverMapServers(
             geometry,
-            altitude, exploreUnknownAltitude, suffix);
+            {
+                altitude: altitude,
+                exploreUnknownAltitude: exploreUnknownAltitude,
+                suffix: suffix
+            }
+        );
         consoleLog('Relocalizing against the discovered servers', 'debug');
         bestServer = await this.#relocalizeWithinDiscoveredServers(
             dataBlob, localizationType, vioPose);
