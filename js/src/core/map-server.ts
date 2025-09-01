@@ -35,6 +35,7 @@ interface MapServerCapabilities {
     commonName?: string; // Common name of the map server.
     iconURL?: string; // URL of the icon to be used for the map server.
     services?: ServiceDescription[]; // List of services provided by the map server.
+    [key: string]: any; // Additional properties can be added as needed.
 }
 
 /**
