@@ -2,7 +2,7 @@
   "name": "@openflam/dnsspatialdiscovery",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openflam/dns-spatial-discovery.git.git"
+    "url": "git+https://github.com/openflam/dns-spatial-discovery.git"
   },
   "version": "4.4.4",
   "description": "Using the DNS to disocvery localization servers based on location",
@@ -35,6 +35,6 @@
     "axios": "^1.7.2"
   },
   "publishConfig": {
-    "registry": "https://npm.pkg.github.com"
+    "access": "public"
   }
 }
