@@ -1,11 +1,9 @@
 # Javascript DNS spatial discovery
 
 ## Installation
-The npm package is hosted within the `openflam` scope on Github npm registry.
+The npm package is now hosted on npmjs.
 
 ```sh
-npm login --scope=@openflam --registry=https://npm.pkg.github.com
-<Login with your PERSONAL username and password>
 npm install @openflam/dnsspatialdiscovery
 ```
 
