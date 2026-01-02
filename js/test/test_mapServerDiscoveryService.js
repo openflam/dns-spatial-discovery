@@ -95,5 +95,16 @@ describe('Discovery Service', function () {
             "india-mapserver.gov.in/maps/bangalore"
         ];
         assert.sameMembers(servers, expectedServers);
+
+        // Verify new properties
+        const populationMap = childMapServersDiscovered["india-mapserver.gov.in/maps/population"];
+        assert.equal(populationMap.id, 11);
+        assert.equal(populationMap.building_id, "CIC");
+        assert.sameMembers(populationMap.levels, ["L"]);
+
+        const bangaloreMap = childMapServersDiscovered["india-mapserver.gov.in/maps/bangalore"];
+        assert.equal(bangaloreMap.id, 3);
+        assert.equal(bangaloreMap.building_id, "CIC");
+        assert.sameMembers(bangaloreMap.levels, ["2"]);
     });
 });

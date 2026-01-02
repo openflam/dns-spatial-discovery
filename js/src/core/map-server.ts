@@ -59,6 +59,11 @@ class MapServer {
     // The last entry is the most recent data.
     localizationDataList: LocalizationData[] = [];
 
+    // Optional Discovery Attributes
+    id?: number | null;
+    building_id?: string | null;
+    levels?: string[];
+
     constructor(name: string) {
         this.name = name;
     }

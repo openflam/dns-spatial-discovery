@@ -11,6 +11,9 @@ const urls: [string] = [
 interface MapInfo {
   name: string;
   url: string;
+  id?: number | null;
+  building_id?: string | null;
+  levels?: string[] | null;
 }
 interface DiscoveryServiceResponse {
   count: number;
@@ -20,15 +23,21 @@ interface DiscoveryServiceResponse {
 function mockDiscoveryServer(mockAdapter: MockAdapter) {
 
     const discoveryResponse: DiscoveryServiceResponse = {
-        count: 1,
+        count: 2,
         maps: [
             {
                 name: "Population Map",
                 url: "/maps/population",
+                id: 11,
+                building_id: "CIC",
+                levels: ["L"]
             },
             {
                 name: "Bangalore Map",
                 url: "/maps/bangalore",
+                id: 3,
+                building_id: "CIC",
+                levels: ["2"]
             }
         ],
     };

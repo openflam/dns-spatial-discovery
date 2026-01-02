@@ -14,6 +14,9 @@ import axios from "../utils/axiosInstance";
 interface MapInfo {
   name: string;
   url: string;
+  id?: number | null;
+  building_id?: string | null;
+  levels?: string[] | null;
 }
 interface DiscoveryServiceResponse {
   count: number;
@@ -128,7 +131,14 @@ async function queryDiscoveryService(
     responseData.maps.forEach(map => {
         // Assuming the map URLs are relative to the map server's base URL
         const childURL = `${mapServer.name}${map.url.startsWith('/') ? '' : '/'}${map.url}`;
-        childMapServersDiscovered[childURL] = new MapServer(childURL);
+        const childMapServer = new MapServer(childURL);
+        
+        // Populate optional fields
+        if(map.id !== undefined) childMapServer.id = map.id;
+        if(map.building_id !== undefined) childMapServer.building_id = map.building_id;
+        if(map.levels !== undefined && map.levels !== null) childMapServer.levels = map.levels;
+
+        childMapServersDiscovered[childURL] = childMapServer;
     });
 
     return childMapServersDiscovered;
